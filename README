@@ -1,1 +1,26 @@
 This project is for The TSP Course of 2009
+
+Author: Tydus Ken <http://tydus.org>
+
+Prerequisities:
+    Linux kernel 2.6+
+    Python 2.6+ (with setuptools)
+    Nginx 0.7+ (must be compiled with --with-http-sub-module)
+    MongoDB 1.6+
+
+Install:
+    # Install
+    python setup.py install
+
+    # Modify your configs
+    vi nginx_config
+
+    # Enable the site in nginx
+    ln -s nginx_config /etc/nginx/sites-enabled/tsp
+
+    # Run the Service
+    ./tsp
+
+    # Restart nginx
+    service nginx restart
+
