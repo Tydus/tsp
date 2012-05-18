@@ -6,7 +6,8 @@ from user import Professor,Student
 # Model
 class Task(Document):
     name=StringField(required=True)
-    professor=ReferenceField(Professor)
+    description=StringField()
+    professor=ReferenceField(Professor,required=True)
     students=ListField(ReferenceField(Student))
     
 
