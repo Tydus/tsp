@@ -8,7 +8,7 @@ class Settings(DynamicDocument):
 
 # View
 class Admin_Phase(JsonRequestHandler):
-    '''/admin/phase'''
+    r'''/admin/phase'''
     def get(self):
         d=Settings.get(phase__not=None)
         self.write({'phase':d.phase})

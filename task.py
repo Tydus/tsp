@@ -13,41 +13,41 @@ class Task(Document):
 
 # View
 class Stu_Task(JsonRequestHandler):
-    '''/stu/task'''
+    r'''/stu/task'''
     def get(self):
         raise NotImplementedError
 
 class Stu_Task_(JsonRequestHandler):
-    '''/stu/task/([^/]+)'''
+    r'''/stu/task/([^/]+)'''
     def get(self,t):
         raise NotImplementedError
     def post(self,t):
         raise NotImplementedError
 
 class Pro_Task(JsonRequestHandler):
-    '''/pro/task'''
+    r'''/pro/task'''
     def get(self):
         raise NotImplementedError
 
 class Pro_Task_(JsonRequestHandler):
-    '''/pro/task/([^/]+)'''
+    r'''/pro/task/([^/]+)'''
     def get(self,t):
         raise NotImplementedError
     def post(self,t,s):
         raise NotImplementedError
 
 class Admin_Student(JsonRequestHandler):
-    '''/admin/student'''
+    r'''/admin/student'''
     def get(self):
         raise NotImplementedError
 
 class Admin_Task(JsonRequestHandler):
-    '''/admin/task'''
+    r'''/admin/task'''
     def get(self):
         raise NotImplementedError
 
 class Admin_Task_(JsonRequestHandler):
-    '''/admin/task/([^/]+)'''
+    r'''/admin/task/([^/]+)'''
     def get(self,t):
         raise NotImplementedError
     def post(self,t):
