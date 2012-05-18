@@ -38,8 +38,8 @@ def parse_args():
     ap.add_argument('--no-fork', help='Run in forground, for debug use',action='store_true')
     ap.add_argument('-v','--verbose', help='Run in verbose mode, use more to be more verbosity',action='count',default=LOG_INFO)
     ap.add_argument('-q','--quiet', help='Run in quiet mode',action='count',default=0)
-    #ap.add_argument('-p','--pid-file', help='PID file',default='/var/run/osudl.pid')
-    ap.add_argument('--log-file', help='Log file, use - for stderr',default='/var/log/osudl.log')
+    #ap.add_argument('-p','--pid-file', help='PID file',default='/var/run/tsp.pid')
+    ap.add_argument('--log-file', help='Log file, use - for stderr',default='/var/log/tsp.log')
 
     ap.add_argument('--db-host', help='Database host name', default='127.0.0.1')
     ap.add_argument('--db-port', help='Database port', default=27017,type=int)
