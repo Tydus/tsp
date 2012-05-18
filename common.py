@@ -9,21 +9,11 @@ class JsonRequestHandler(RequestHandler):
     def write(self,obj):
         return RequestHandler.write(self,json_encode(obj))
 
-class StudentRequestHandler(JsonRequestHandler):
     def prepare(self):
-        if not self.current_user or self.get_secure_cookie('t')!='Student':
-            raise HTTPError(403)
-
-class ProfessorRequestHandler(JsonRequestHandler):
-    def prepare(self):
-        if not self.current_user or self.get_secure_cookie('t')!='Professor':
-            raise HTTPError(403)
-
-class AdminRequestHandler(JsonRequestHandler):
-    def prepare(self):
-        if not self.current_user or self.get_secure_cookie('t')!='Admin':
-            raise HTTPError(403)
-
+        url=self.__doc__.strip().split('/')
+        if url[0] in ['student','professor','admin']:
+            if not self.current_user or lower(self.get_secure_cookie('t'))!=url[0]:
+                raise HTTPError(403)
 
 def strtime(tm=None):
     return "%04d-%02d-%02d %02d:%02d:%02d"%gmtime(tm or time())[:6]
