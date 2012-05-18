@@ -16,6 +16,20 @@ from tornado.ioloop import IOLoop
 
 from common import *
 
+def strtime(tm=None):
+    return "%04d-%02d-%02d %02d:%02d:%02d"%gmtime(tm or time())[:6]
+
+# Log
+LOG_FATAL=0
+LOG_ERROR=1
+LOG_WARNING=2
+LOG_INFO=3
+LOG_VERBOSE=4
+def log(level,s,*args):
+    if level<=verbosity:
+        print >>logfd,"[%19s][%d]"%(strtime(),level)+s%tuple(args)
+        logfd.flush()
+
 def parse_args():
     ap=ArgumentParser(description='TSP Backend Server')
 
