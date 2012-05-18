@@ -8,6 +8,7 @@ class Settings(DynamicDocument):
 
 # View
 class AdvancePhase(AdminRequestHandler):
-    Settings.get(phase=).update(inc__phase=1)
-
-    self.write({'ok':True})
+    d=Settings.get(phase__not=None)
+    d.phase+=1
+    d.save()
+    self.write({'err':0,'phase':d.phase})
