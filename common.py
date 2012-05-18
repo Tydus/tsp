@@ -1,22 +1,28 @@
 
-from tornado.web import RequestHandler
+from tornado.web import RequestHandler,HTTPError
 from tornado.escape import json_encode
 
 class JsonRequestHandler(RequestHandler):
+    def get_current_user(self):
+        return self.get_secure_cookie('u')
+
     def write(self,obj):
         return RequestHandler.write(self,json_encode(obj))
 
 class StudentRequestHandler(JsonRequestHandler):
     def prepare(self):
-        raise NotImplementedError
+        if not self.current_user or self.get_secure_cookie('t')!='Student':
+            raise HTTPError(403)
 
 class ProfessorRequestHandler(JsonRequestHandler):
     def prepare(self):
-        raise NotImplementedError
+        if not self.current_user or self.get_secure_cookie('t')!='Professor':
+            raise HTTPError(403)
 
 class AdminRequestHandler(JsonRequestHandler):
     def prepare(self):
-        raise NotImplementedError
+        if not self.current_user or self.get_secure_cookie('t')!='Admin':
+            raise HTTPError(403)
 
 
 def strtime(tm=None):
