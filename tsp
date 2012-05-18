@@ -85,8 +85,9 @@ def main():
 
     # Run Server
 
+    global leafHandlers
     static_path=path.join(path.dirname(__file__),'static')
-    leafHandlers=(r'/(.*\..*)',StaticFileHandler,{'path':static_path})+leafHandlers
+    leafHandlers=[(r'/(.*\..*)',StaticFileHandler,{'path':static_path})]+leafHandlers
     server=HTTPServer(Application(leafHandlers,cookie_secret='(HY$WGIH(&$#*)I*5yhr)*HG)Oh59878ehT%08'))
     try:
         server.listen(args.listen)
