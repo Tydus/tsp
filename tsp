@@ -4,12 +4,12 @@ from time import time,ctime,gmtime
 from mongoengine import *
 from mongoengine.connection import ConnectionError
 from sys import stderr
-from os import fork
+from os import fork,path
 from urllib import quote
 from argparse import ArgumentParser
 from socket import error as SocketError
 
-from tornado.web import Application,RequestHandler,asynchronous,HTTPError
+from tornado.web import StaticFileHandler,Application,RequestHandler,asynchronous,HTTPError
 from tornado.httpclient import AsyncHTTPClient
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
@@ -83,14 +83,11 @@ def main():
            ))
         exit(-1)
 
-    app=Application([
-        (,),
-        (,),
-        (,),
-        ])
-
     # Run Server
-    server=HTTPServer(app)
+
+    static_path=path.join(path.dirname(__file__),'static')
+    leafHandlers=(r'/(.*\..*)',StaticFileHandler,{'path':static_path})+leafHandlers
+    server=HTTPServer(Application(leafHandlers,cookie_secret='(HY$WGIH(&$#*)I*5yhr)*HG)Oh59878ehT%08'))
     try:
         server.listen(args.listen)
     except SocketError:
