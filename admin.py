@@ -7,8 +7,14 @@ class Settings(DynamicDocument):
     pass
 
 # View
-class AdvancePhase(AdminRequestHandler):
-    d=Settings.get(phase__not=None)
-    d.phase+=1
-    d.save()
-    self.write({'err':0,'phase':d.phase})
+class Admin_Phase(JsonRequestHandler):
+    '''/admin/phase'''
+    def get(self):
+        d=Settings.get(phase__not=None)
+        self.write({'phase':d.phase})
+
+    def post(self):
+        d=Settings.get(phase__not=None)
+        d.phase+=1
+        d.save()
+        self.write({'err':0,'phase':d.phase})
