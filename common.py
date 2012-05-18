@@ -8,15 +8,15 @@ class JsonRequestHandler(RequestHandler):
 
 class StudentRequestHandler(JsonRequestHandler):
     def prepare(self):
-        throw NotImplementedError
+        raise NotImplementedError
 
 class ProfessorRequestHandler(JsonRequestHandler):
     def prepare(self):
-        throw NotImplementedError
+        raise NotImplementedError
 
 class AdminRequestHandler(JsonRequestHandler):
     def prepare(self):
-        throw NotImplementedError
+        raise NotImplementedError
 
 
 def strtime(tm=None):
