@@ -21,6 +21,7 @@ class Admin(User):
 
 # View
 class Login(JsonRequestHandler):
+    '''/login'''
     def post(self):
         '''
         username=<>&password=<>
@@ -39,6 +40,7 @@ class Login(JsonRequestHandler):
         return {'err':0}
 
 class Logout(JsonRequestHandler):
+    '''/logout'''
     def post(self):
         self.clear_cookie('u')
         self.clear_cookie('t')
