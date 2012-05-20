@@ -54,5 +54,5 @@ class Me(JsonRequestHandler):
         u=User.objects(username=u).first()
         if not u:
             return self.write({'err':'No such user'})
-        return self.write(dict(u))
+        return self.write({'username':u.username,'name':u.realname})
 
