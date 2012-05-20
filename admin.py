@@ -1,14 +1,14 @@
 
 from mongoengine import *
-from common import JsonRequestHandler
+from common import JsonRequestHandler,leafHandler
 
 # Model
 class Settings(DynamicDocument):
     pass
 
 # View
+@leafHandler(r'''/admin/phase''')
 class Admin_Phase(JsonRequestHandler):
-    r'''/admin/phase'''
     def get(self):
         d=Settings.get(phase__not=None)
         self.write({'phase':d.phase})

@@ -1,6 +1,6 @@
 
 from mongoengine import *
-from common import JsonRequestHandler
+from common import JsonRequestHandler,leafHandler
 
 # Model
 
@@ -21,8 +21,8 @@ class Admin(User):
 
 
 # View
+@leafHandler(r'''/login''')
 class Login(JsonRequestHandler):
-    r'''/login'''
     def post(self):
         '''
         username=<>&password=<>
@@ -40,8 +40,8 @@ class Login(JsonRequestHandler):
                 self.set_secure_cookie('t',i.__name__)
         return self.write({'type':self.get_secure_cookie('t')})
 
+@leafHandler(r'''/logout''')
 class Logout(JsonRequestHandler):
-    r'''/logout'''
     def post(self):
         self.clear_cookie('u')
         self.clear_cookie('t')

@@ -15,6 +15,7 @@ from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 
 from common import *
+import admin,task,user
 
 def strtime(tm=None):
     return "%04d-%02d-%02d %02d:%02d:%02d"%gmtime(tm or time())[:6]
