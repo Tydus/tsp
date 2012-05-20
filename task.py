@@ -2,6 +2,7 @@
 from mongoengine import *
 from common import JsonRequestHandler,leafHandler
 from user import Professor,Student
+from admin import Settings
 
 # Model
 class Task(Document):
@@ -10,7 +11,6 @@ class Task(Document):
     professor=ReferenceField(Professor,required=True)
     students=ListField(ReferenceField(Student))
     
-
 # View
 @leafHandler(r'''/task''')
 class Task_(JsonRequestHandler):
@@ -26,9 +26,14 @@ class Task_(JsonRequestHandler):
                 })
         return self.write({'task':l})
     def post(self):
+        phase=Settings.get(phase__not=None).phase
+
         t=self.get_secure_cookie('t')
         if t=='stu':
             task=self.get_argument('task')
+
+            if phase not in [0,2]:
+                return self.write({'err':'Not Your Turn'})
 
             d=Task.objects(_id=ObjectId(task)).first()
             if not d:
@@ -39,6 +44,9 @@ class Task_(JsonRequestHandler):
         if t=='pro':
             task=self.get_argument('task')
             choice=int(self.get_argument('choice'))
+
+            if phase not in [1,3]:
+                return self.write({'err':'Not Your Turn'})
 
             d=Task.objects(_id=ObjectId(task)).first()
             if not d:
@@ -51,6 +59,10 @@ class Task_(JsonRequestHandler):
         if t=='admin':
             task=self.get_argument('task')
             stu=self.get_argument('stu')
+
+            if phase!=5:
+                return self.write({'err':'Not Your Turn'})
+
             d=Task.objects(_id=ObjectId(task)).first()
             if not d:
                 return self.write({'err':'Task not Exist'})
@@ -61,7 +73,6 @@ class Task_(JsonRequestHandler):
                 return self.write({'err':'No Such Student'})
             d.students=[s]
             d.save()
-
 
         return self.write({})
 
