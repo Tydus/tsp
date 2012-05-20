@@ -17,4 +17,4 @@ class Admin_Phase(JsonRequestHandler):
         d=Settings.get(phase__not=None)
         d.phase+=1
         d.save()
-        self.write({'err':0,'phase':d.phase})
+        self.write({'phase':d.phase})
