@@ -43,7 +43,7 @@ def parse_args():
 
     ap.add_argument('--db-host', help='Database host name', default='127.0.0.1')
     ap.add_argument('--db-port', help='Database port', default=27017,type=int)
-    ap.add_argument('--db-name', help='Database name', default='osudl')
+    ap.add_argument('--db-name', help='Database name', default='tsp')
     ap.add_argument('--db-user', help='Database user name')
     ap.add_argument('--db-pass', help='Database password')
 
