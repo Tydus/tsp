@@ -20,7 +20,7 @@ class Task_(JsonRequestHandler):
             l.append({
                 'name':i.name,
                 'desc':i.description,
-                'prof':{'name':i.prof.realname},
+                'prof':{'name':i.professor.realname},
                 'stu':[{'name':x.realname} for x in i.students],
                 })
         return self.write({'task':l})
