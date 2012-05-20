@@ -18,6 +18,7 @@ class Task_(JsonRequestHandler):
         l=[]
         for i in Task.objects:
             l.append({
+                'id':str(i._id),
                 'name':i.name,
                 'desc':i.description,
                 'prof':{'name':i.professor.realname},
