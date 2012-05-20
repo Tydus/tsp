@@ -1,6 +1,6 @@
 
 from mongoengine import *
-from common import JsonRequestHandler,leafHandler
+from common import JsonRequestHandler,leafHandler,HTTPError
 
 # Model
 
@@ -44,4 +44,15 @@ class Logout(JsonRequestHandler):
         self.clear_cookie('u')
         self.clear_cookie('t')
         return self.write({})
+
+@leafHandler(r'''/me''')
+class Me(JsonRequestHandler):
+    def get(self):
+        u=self.get_secure_cookie('u')
+        if not u:
+            raise HTTPError(403)
+        u=User.objects(username=u).first()
+        if not u:
+            return self.write({'err':'No such user'})
+        return self.write(dict(u))
 
