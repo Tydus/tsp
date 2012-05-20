@@ -12,44 +12,16 @@ class Task(Document):
     
 
 # View
-@leafHandler(r'''/stu/task''')
-class Stu_Task(JsonRequestHandler):
+@leafHandler(r'''/task''')
+class Task_(JsonRequestHandler):
     def get(self):
-        raise NotImplementedError
-
-@leafHandler(r'''/stu/task/([^/]+)''')
-class Stu_Task_(JsonRequestHandler):
-    def get(self,t):
-        raise NotImplementedError
-    def post(self,t):
-        raise NotImplementedError
-
-@leafHandler(r'''/pro/task''')
-class Pro_Task(JsonRequestHandler):
-    def get(self):
-        raise NotImplementedError
-
-@leafHandler(r'''/pro/task/([^/]+)''')
-class Pro_Task_(JsonRequestHandler):
-    def get(self,t):
-        raise NotImplementedError
-    def post(self,t,s):
-        raise NotImplementedError
-
-@leafHandler(r'''/admin/student''')
-class Admin_Student(JsonRequestHandler):
-    def get(self):
-        raise NotImplementedError
-
-@leafHandler(r'''/admin/task''')
-class Admin_Task(JsonRequestHandler):
-    def get(self):
-        raise NotImplementedError
-
-@leafHandler(r'''/admin/task/([^/]+)''')
-class Admin_Task_(JsonRequestHandler):
-    def get(self,t):
-        raise NotImplementedError
-    def post(self,t):
-        raise NotImplementedError
+        l=[]
+        for i in Task.objects:
+            l.append({
+                'name':i.name,
+                'desc':i.description,
+                'prof':{'name':i.prof.realname},
+                'stu':[{'name':x.realname} for x in i.students],
+                })
+        return self.write({'task':l})
 

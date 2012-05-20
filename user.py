@@ -56,3 +56,12 @@ class Me(JsonRequestHandler):
             return self.write({'err':'No such user'})
         return self.write({'username':u.username,'name':u.realname})
 
+
+@leafHandler(r'''/student''')
+class Student_(JsonRequestHandler):
+    def get(self):
+        l=[]
+        for i in Student.objects:
+            l.append({'username':i.username,'name':i.realname})
+        return self.write({'student':l})
+
