@@ -3,6 +3,7 @@ from mongoengine import *
 from common import JsonRequestHandler,leafHandler
 from user import Professor,Student
 from admin import Settings
+from bson import ObjectId
 
 # Model
 class Task(Document):
@@ -26,7 +27,7 @@ class Task_(JsonRequestHandler):
                 })
         return self.write({'task':l})
     def post(self):
-        phase=Settings.get(phase__not=None).phase
+        phase=Settings.objects().first().phase
 
         t=self.get_secure_cookie('t')
         if t=='stu':

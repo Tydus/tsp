@@ -10,11 +10,11 @@ class Settings(DynamicDocument):
 @leafHandler(r'''/admin/phase''')
 class Admin_Phase(JsonRequestHandler):
     def get(self):
-        d=Settings.get(phase__not=None)
+        d=Settings.objects().first()
         self.write({'phase':d.phase})
 
     def post(self):
-        d=Settings.get(phase__not=None)
+        d=Settings.objects().first()
         d.phase+=1
         d.save()
         self.write({'phase':d.phase})
