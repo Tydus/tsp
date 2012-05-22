@@ -22,7 +22,7 @@ class Task_(JsonRequestHandler):
                 'id':str(i.id),
                 'name':i.name,
                 'desc':i.description,
-                'prof':{'name':i.professor.realname},
+                'prof':i.professor.realname,
                 'stu':[{'name':x.realname} for x in i.students],
                 })
         return self.write({'task':l})
