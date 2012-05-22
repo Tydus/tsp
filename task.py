@@ -19,7 +19,7 @@ class Task_(JsonRequestHandler):
         l=[]
         for i in Task.objects:
             l.append({
-                'id':str(i._id),
+                'id':str(i.id),
                 'name':i.name,
                 'desc':i.description,
                 'prof':{'name':i.professor.realname},
@@ -36,7 +36,7 @@ class Task_(JsonRequestHandler):
             if phase not in [0,2]:
                 return self.write({'err':'Not Your Turn'})
 
-            d=Task.objects(_id=ObjectId(task)).first()
+            d=Task.objects(id=ObjectId(task)).first()
             if not d:
                 return self.write({'err':'Task not Exist'})
             d.students.append(Student.objects(username=self.get_secure_cookie('u').first()))
@@ -49,7 +49,7 @@ class Task_(JsonRequestHandler):
             if phase not in [1,3]:
                 return self.write({'err':'Not Your Turn'})
 
-            d=Task.objects(_id=ObjectId(task)).first()
+            d=Task.objects(id=ObjectId(task)).first()
             if not d:
                 return self.write({'err':'Task not Exist'})
             if choice>=len(d.students):
@@ -64,12 +64,12 @@ class Task_(JsonRequestHandler):
             if phase!=5:
                 return self.write({'err':'Not Your Turn'})
 
-            d=Task.objects(_id=ObjectId(task)).first()
+            d=Task.objects(id=ObjectId(task)).first()
             if not d:
                 return self.write({'err':'Task not Exist'})
             if d.students:
                 return self.write({'err':'Already has Assignee'})
-            s=Student.objects(_id=stu).first()
+            s=Student.objects(id=stu).first()
             if not s:
                 return self.write({'err':'No Such Student'})
             d.students=[s]
