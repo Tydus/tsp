@@ -1,6 +1,7 @@
 
 from mongoengine import *
 from common import JsonRequestHandler,leafHandler,HTTPError
+from admin import Settings
 
 # Model
 
@@ -19,6 +20,7 @@ class Professor(User):
 class Admin(User):
     pass
 
+allow_phase={'stu':[0,2],'pro':[1,3],'admin':[4]}
 
 # View
 @leafHandler(r'''/login''')
@@ -29,10 +31,14 @@ class Login(JsonRequestHandler):
             return self.write({'err':'No such user'})
         if u.password!=self.get_argument('password'):
             return self.write({'err':'Password mismatch'})
-        self.set_secure_cookie('u',u.username)
         for i in [Student,Professor,Admin]:
             if isinstance(u,i):
                 t={'Student':'stu','Professor':'pro','Admin':'admin'}[i.__name__]
+                phase=Settings.objects().first().phase
+                if phase not in allow_phase[t]:
+                    return self.write({'err':'Not your phase'})
+
+        self.set_secure_cookie('u',u.username)
         self.set_secure_cookie('t',t)
         return self.write({'type':t})
 
