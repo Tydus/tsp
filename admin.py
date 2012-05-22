@@ -7,8 +7,8 @@ class Settings(DynamicDocument):
     pass
 
 # View
-@leafHandler(r'''/admin/phase''')
-class Admin_Phase(JsonRequestHandler):
+@leafHandler(r'''/phase''')
+class Phase(JsonRequestHandler):
     def get(self):
         d=Settings.objects().first()
         self.write({'phase':d.phase})
