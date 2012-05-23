@@ -52,7 +52,7 @@ class Task_(JsonRequestHandler):
 
         if t=='pro':
             task=self.get_argument('task')
-            choice=int(self.get_argument('choice'))
+            choice=self.get_argument('choice')
 
             if phase not in [1,3]:
                 return self.write({'err':'Not Your Turn'})
@@ -60,9 +60,12 @@ class Task_(JsonRequestHandler):
             d=Task.objects(id=ObjectId(task)).first()
             if not d:
                 return self.write({'err':'Task not Exist'})
-            if choice>=len(d.students):
+            for i in d.students:
+                if i.username==choice:
+                    c=i
+            if not c:
                 return self.write({'err':'Out of Range'})
-            d.students=[d.students[choice]]
+            d.students=[c]
             d.save()
 
         if t=='admin':
