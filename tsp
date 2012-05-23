@@ -9,7 +9,7 @@ from urllib import quote
 from argparse import ArgumentParser
 from socket import error as SocketError
 
-from tornado.web import StaticFileHandler,Application,RequestHandler,asynchronous,HTTPError
+from tornado.web import RedirectHandler,StaticFileHandler,Application,RequestHandler,asynchronous,HTTPError
 from tornado.httpclient import AsyncHTTPClient
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
@@ -88,7 +88,10 @@ def main():
 
     global leafHandlers
     static_path=path.join(path.dirname(__file__),'static')
-    leafHandlers=[(r'/(.*\..*)',StaticFileHandler,{'path':static_path})]+leafHandlers
+    leafHandlers=[
+            (r'/(.*\..*)',StaticFileHandler,{'path':static_path}),
+            (r'/',RedirectHandler,{'url':'/login.html'}),
+            ]+leafHandlers
     server=HTTPServer(Application(leafHandlers,cookie_secret='(HY$WGIH(&$#*)I*5yhr)*HG)Oh59878ehT%08'))
     try:
         server.listen(args.listen)
