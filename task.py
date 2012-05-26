@@ -25,7 +25,7 @@ class Task_(JsonRequestHandler):
                 'stu':[{'name':x.realname,'username':x.username} for x in i.students],
                 })
 
-        if self.get_argument('filter')=='unassigned':
+        if self.get_argument('filter',None)=='unassigned':
             l=[i for i in l if i['stu']==[]]
 
         return self.write({'task':sorted(l,key=lambda x:x['name'])})
@@ -74,9 +74,9 @@ class Task_(JsonRequestHandler):
 
         if t=='admin':
             task=self.get_argument('task')
-            stu=self.get_argument('stu')
+            stu=self.get_argument('choice')
 
-            if phase!=5:
+            if phase!=4:
                 return self.write({'err':'Not Your Turn'})
 
             d=Task.objects(id=ObjectId(task)).first()
@@ -84,7 +84,7 @@ class Task_(JsonRequestHandler):
                 return self.write({'err':'Task not Exist'})
             if d.students:
                 return self.write({'err':'Already has Assignee'})
-            s=Student.objects(id=stu).first()
+            s=Student.objects(username=stu).first()
             if not s:
                 return self.write({'err':'No Such Student'})
             d.students=[s]

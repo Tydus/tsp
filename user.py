@@ -19,7 +19,7 @@ class Professor(User):
 class Admin(User):
     pass
 
-allow_phase={'stu':[0,2],'pro':[1,3],'admin':range(4)}
+allow_phase={'stu':[0,2,5],'pro':[1,3,5],'admin':range(5)}
 
 # View
 @leafHandler(r'''/login''')

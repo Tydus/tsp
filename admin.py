@@ -25,7 +25,7 @@ class Student_(JsonRequestHandler):
         for i in Student.objects:
             l.append({'username':i.username,'name':i.realname})
 
-        if self.get_argument('filter')=='unassigned':
+        if self.get_argument('filter',None)=='unassigned':
             for i in Task.objects:
                 for j in i.students:
                     l.remove({'username':j.username,'name':j.realname})
