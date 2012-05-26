@@ -1,9 +1,15 @@
 
+from mongoengine import *
 from tornado.web import RequestHandler,HTTPError
 from tornado.escape import json_encode
 
+# Model
+class Settings(DynamicDocument):
+    pass
+
 leafHandlers=[]
 
+# Others
 def leafHandler(path):
     def _deco(cls):
         leafHandlers.append((path,cls))

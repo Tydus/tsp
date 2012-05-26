@@ -1,7 +1,6 @@
 
 from mongoengine import *
-from common import JsonRequestHandler,leafHandler,HTTPError
-from admin import Settings
+from common import JsonRequestHandler,leafHandler,HTTPError,Settings
 
 # Model
 
@@ -59,13 +58,3 @@ class Me(JsonRequestHandler):
         if not u:
             return self.write({'err':'No such user'})
         return self.write({'username':u.username,'name':u.realname})
-
-
-@leafHandler(r'''/student''')
-class Student_(JsonRequestHandler):
-    def get(self):
-        l=[]
-        for i in Student.objects:
-            l.append({'username':i.username,'name':i.realname})
-        return self.write({'student':l})
-

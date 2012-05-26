@@ -1,8 +1,7 @@
 
 from mongoengine import *
-from common import JsonRequestHandler,leafHandler
+from common import JsonRequestHandler,leafHandler,Settings
 from user import Professor,Student
-from admin import Settings
 from bson import ObjectId
 
 # Model
@@ -25,7 +24,12 @@ class Task_(JsonRequestHandler):
                 'prof':i.professor.realname,
                 'stu':[{'name':x.realname,'username':x.username} for x in i.students],
                 })
+
+        if self.get_argument('filter')=='unassigned':
+            l=[i for i in l if i.stu==[]]
+
         return self.write({'task':sorted(l,key=lambda x:x['name'])})
+
     def post(self):
         phase=Settings.objects().first().phase
 
