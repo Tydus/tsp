@@ -26,7 +26,7 @@ class Task_(JsonRequestHandler):
                 })
 
         if self.get_argument('filter')=='unassigned':
-            l=[i for i in l if i.stu==[]]
+            l=[i for i in l if i['stu']==[]]
 
         return self.write({'task':sorted(l,key=lambda x:x['name'])})
 

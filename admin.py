@@ -1,6 +1,6 @@
 
 from mongoengine import *
-from common import JsonRequestHandler,leafHandler
+from common import JsonRequestHandler,leafHandler,Settings
 from user import Student
 from task import Task
 
@@ -27,8 +27,8 @@ class Student_(JsonRequestHandler):
 
         if self.get_argument('filter')=='unassigned':
             for i in Task.objects:
-                for j in i.stu:
-                    l.remove(j)
+                for j in i.students:
+                    l.remove({'username':j.username,'name':j.realname})
 
         return self.write({'student':l})
 
