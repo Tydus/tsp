@@ -23,7 +23,7 @@ class Task_(JsonRequestHandler):
                 'name':i.name,
                 'desc':i.description,
                 'prof':i.professor.realname,
-                'stu':[{'name':x.realname} for x in i.students],
+                'stu':[{'name':x.realname,'username':x.username} for x in i.students],
                 })
         return self.write({'task':sorted(l,key=lambda x:x['name'])})
     def post(self):
