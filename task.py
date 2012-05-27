@@ -16,7 +16,7 @@ class Task(Document):
 class AddTask(JsonRequestHandler):
     def post(self):
         phase=Settings.objects().first().phase
-        if phase!=-1:
+        if phase!=0:
             return self.write({'err':'Not Your Turn'})
 
         try:
@@ -65,7 +65,7 @@ class Task_(JsonRequestHandler):
         if t=='stu':
             task=self.get_argument('task')
 
-            if phase not in [0,2]:
+            if phase not in [1,3]:
                 return self.write({'err':'Not Your Turn'})
 
             d=Task.objects(id=ObjectId(task)).first()
@@ -84,7 +84,7 @@ class Task_(JsonRequestHandler):
             task=self.get_argument('task')
             choice=self.get_argument('choice')
 
-            if phase not in [1,3]:
+            if phase not in [2,4]:
                 return self.write({'err':'Not Your Turn'})
 
             d=Task.objects(id=ObjectId(task)).first()
@@ -104,7 +104,7 @@ class Task_(JsonRequestHandler):
             task=self.get_argument('task')
             stu=self.get_argument('choice')
 
-            if phase!=4:
+            if phase!=5:
                 return self.write({'err':'Not Your Turn'})
 
             d=Task.objects(id=ObjectId(task)).first()
