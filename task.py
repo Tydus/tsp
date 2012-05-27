@@ -67,6 +67,8 @@ class Task_(JsonRequestHandler):
             d=Task.objects(id=ObjectId(task)).first()
             if not d:
                 return self.write({'err':'Task not Exist'})
+            if d.professor!=user:
+                return self.write({'err':'Not Your Task'})
             for i in d.students:
                 if i.username==choice:
                     c=i
