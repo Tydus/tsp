@@ -1,7 +1,7 @@
 
 from mongoengine import *
 from common import JsonRequestHandler,leafHandler,Settings
-from user import Professor,Student
+from user import Professor,Student,User
 from bson import ObjectId
 
 # Model
@@ -20,7 +20,7 @@ class AddTask(JsonRequestHandler):
             return self.write({'err':'Not Your Turn'})
 
         try:
-            user=Student.objects(username=self.get_secure_cookie('u')).first()
+            user=User.objects(username=self.get_secure_cookie('u')).first()
         except:
             return self.write({'err':'No Such User'})
 
@@ -56,7 +56,7 @@ class Task_(JsonRequestHandler):
     def post(self):
         phase=Settings.objects().first().phase
         try:
-            user=Student.objects(username=self.get_secure_cookie('u')).first()
+            user=User.objects(username=self.get_secure_cookie('u')).first()
         except:
             return self.write({'err':'No Such User'})
 
