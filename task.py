@@ -32,6 +32,11 @@ class Task_(JsonRequestHandler):
 
     def post(self):
         phase=Settings.objects().first().phase
+        try:
+            user=Student.objects(username=self.get_secure_cookie('u')).first()
+        except:
+            return self.write({'err':'No Such User'})
+
 
         t=self.get_secure_cookie('t')
         if t=='stu':
@@ -40,8 +45,6 @@ class Task_(JsonRequestHandler):
             if phase not in [0,2]:
                 return self.write({'err':'Not Your Turn'})
 
-            s=Student.objects(username=self.get_secure_cookie('u')).first()
-
             d=Task.objects(id=ObjectId(task)).first()
             if not d:
                 return self.write({'err':'Task not Exist'})
@@ -49,9 +52,9 @@ class Task_(JsonRequestHandler):
                 return self.write({'err':'Task Full'})
 
             # Clear Currently Selected
-            Task.objects.update(pull__students=s)
+            Task.objects.update(pull__students=user)
 
-            d.students.append(s)
+            d.students.append(user)
             d.save()
 
         if t=='pro':
