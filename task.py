@@ -12,6 +12,29 @@ class Task(Document):
     students=ListField(ReferenceField(Student))
     
 # View
+@leafHandler(r'''/addtask''')
+class AddTask(JsonRequestHandler):
+    def post(self):
+        phase=Settings.objects().first().phase
+        if phase!=-1:
+            return self.write({'err':'Not Your Turn'})
+
+        try:
+            user=Student.objects(username=self.get_secure_cookie('u')).first()
+        except:
+            return self.write({'err':'No Such User'})
+
+        t=self.get_secure_cookie('t')
+
+        if t!='pro':
+            return self.write({'err':'Access Denied'})
+
+        name=self.get_argument('name')
+        desc=self.get_argument('desc')
+
+        Task(name=name,description=desc,professor=user,students=[]).save()
+        return self.write({})
+
 @leafHandler(r'''/task''')
 class Task_(JsonRequestHandler):
     def get(self):
