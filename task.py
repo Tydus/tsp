@@ -76,6 +76,7 @@ class Task_(JsonRequestHandler):
             # Clear Currently Selected
             Task.objects.update(pull__students=s)
 
+            d.reload()
             d.students.append(s)
             d.save()
 
