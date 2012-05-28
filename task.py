@@ -70,8 +70,6 @@ class Task_(JsonRequestHandler):
             d=Task.objects(id=ObjectId(task)).first()
             if not d:
                 return self.write({'err':'Task not Exist'})
-            if len(d.students)>=2:
-                return self.write({'err':'Task Full'})
 
             # Clear Currently Selected
             Task.objects.update(pull__students=s)
