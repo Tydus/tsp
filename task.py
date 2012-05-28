@@ -99,7 +99,7 @@ class Task_(JsonRequestHandler):
             if not c:
                 return self.write({'err':'Out of Range'})
 
-            c.applied=True
+            c.applied=d.name
             c.save()
 
             d.applyTo=c
@@ -122,7 +122,7 @@ class Task_(JsonRequestHandler):
             if not s:
                 return self.write({'err':'No Such Student'})
     
-            s.applied=True
+            s.applied=d.name
             s.save()
             
             d.applyTo=s

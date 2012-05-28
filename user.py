@@ -9,7 +9,7 @@ class User(Document):
     username=StringField(required=True,primary_key=True)
     password=StringField(required=True)
     realname=StringField(required=True)
-    applied=BooleanField(default=False)
+    applied=StringField()
 
 class Student(User):
     pass
@@ -38,7 +38,7 @@ class Login(JsonRequestHandler):
                 if phase not in allow_phase[t]:
                     return self.write({'err':'Not your phase'})
                 if u.applied:
-                    return self.write({'err':'You are Selected'})
+                    return self.write({'err':'You are Selected by '+u.applied})
 
         self.set_secure_cookie('u',u.username)
         self.set_secure_cookie('t',t)
