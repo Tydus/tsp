@@ -10,6 +10,7 @@ class Task(Document):
     description=StringField()
     professor=ReferenceField(Professor,required=True)
     students=ListField(ReferenceField(Student))
+    applyTo=ReferenceField(Student)
     
 # View
 @leafHandler(r'''/addtask''')
@@ -40,13 +41,16 @@ class Task_(JsonRequestHandler):
     def get(self):
         l=[]
         for i in Task.objects:
-            l.append({
+            t={
                 'id':str(i.id),
                 'name':i.name,
                 'desc':i.description,
                 'prof':i.professor.realname,
                 'stu':[{'name':x.realname,'username':x.username} for x in i.students],
-                })
+                }
+            if i.applyTo:
+                t['apply']={'name':i.applyTo.realname,'username':i.applyTo.username}
+            l.append(t)
 
         if self.get_argument('filter',None)=='unassigned':
             l=[i for i in l if i['stu']==[]]
@@ -88,12 +92,18 @@ class Task_(JsonRequestHandler):
             d=Task.objects(id=ObjectId(task)).first()
             if not d:
                 return self.write({'err':'Task not Exist'})
+            c=None
             for i in d.students:
                 if i.username==choice:
                     c=i
             if not c:
                 return self.write({'err':'Out of Range'})
-            d.students=[c]
+
+            c.applied=True
+            c.save()
+
+            d.applyTo=c
+            d.student=[]
             d.save()
 
         if t=='admin':
@@ -106,12 +116,16 @@ class Task_(JsonRequestHandler):
             d=Task.objects(id=ObjectId(task)).first()
             if not d:
                 return self.write({'err':'Task not Exist'})
-            if d.students:
-                return self.write({'err':'Already has Assignee'})
+            if d.applyTo:
+                return self.write({'err':'Already applied'})
             s=Student.objects(username=stu).first()
             if not s:
                 return self.write({'err':'No Such Student'})
-            d.students=[s]
+    
+            s.applied=True
+            s.save()
+            
+            d.applyTo=s
             d.save()
 
         return self.write({})

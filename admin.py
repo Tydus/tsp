@@ -22,13 +22,14 @@ class Phase(JsonRequestHandler):
 class Student_(JsonRequestHandler):
     def get(self):
         l=[]
-        for i in Student.objects:
+        for i in Student.objects(applied=False):
             l.append({'username':i.username,'name':i.realname})
+
+        return self.write({'student':l})
 
         if self.get_argument('filter',None)=='unassigned':
             for i in Task.objects:
                 for j in i.students:
                     l.remove({'username':j.username,'name':j.realname})
 
-        return self.write({'student':l})
 
