@@ -35,10 +35,10 @@ class Login(JsonRequestHandler):
             if isinstance(u,i):
                 t={'Student':'stu','Professor':'pro','Admin':'admin'}[i.__name__]
                 phase=Settings.objects().first().phase
-                if phase not in allow_phase[t]:
-                    return self.write({'err':'Not your phase'})
                 if u.applied:
                     return self.write({'err':'You are Selected by '+u.applied})
+                if phase not in allow_phase[t]:
+                    return self.write({'err':'Not your phase'})
 
         self.set_secure_cookie('u',u.username)
         self.set_secure_cookie('t',t)
