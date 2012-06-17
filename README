@@ -1,6 +1,10 @@
-This project is for The TSP Course of 2009
+Graduation Design Subject Double-Choose System
+for BUPT SSE
 
-Author: Tydus Ken <http://tydus.org>
+Authors:
+    Tydus Ken <Tydus@Tydus.org>
+    Thynson Lan <lanxingcan@gmail.com>
+    Hane no Kami <imandry.c@gmail.com>
 
 Prerequisities:
     Linux kernel 2.6+
@@ -12,15 +16,6 @@ Install:
     # Install
     python setup.py install
 
-    # Modify your configs
-    vi nginx_config
-
-    # Enable the site in nginx
-    ln -s nginx_config /etc/nginx/sites-enabled/tsp
-
     # Run the Service
     ./tsp
-
-    # Restart nginx
-    service nginx restart
 
