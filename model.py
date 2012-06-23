@@ -40,7 +40,7 @@ class Admin(User):
 
 
 # Subject
-class Subject(Document):
+class Subject(Document,EmbeddedDocument):
     name=StringField(required=True)                          # 课题名
     professor=EmbeddedDocumentField(Professor,required=True) # 导师
     selected_by=ListField(EmbeddedDocumentField(Student))    # 待选学生
