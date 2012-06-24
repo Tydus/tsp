@@ -23,7 +23,10 @@ class hAddTask(JsonRequestHandler):
         source=self.get_argument('source')
 
 
+        t=Task(name=name,professor=user)
+
         rol=dumps(dict(
+                id=str(t.id),
                 name=name,
                 desc=desc,
                 type1=type1,
@@ -38,7 +41,8 @@ class hAddTask(JsonRequestHandler):
         except:
             raise HTTPError(500,'Cannot write to subjects.lst')
 
-        Task(name=name,professor=user).save()
+        t.save()
+
         return self.write(rol)
 
 @leafHandler(r'''/task''')
