@@ -10,7 +10,7 @@
 ################################################################################
 
 from model import User,Admin,Settings
-from common import JsonRequestHandler,leafHandler
+from common import JsonRequestHandler,leafHandler,phase
 
 
 @leafHandler(r'''/phase''')
@@ -21,8 +21,7 @@ class Phase(JsonRequestHandler):
             raise HTTPError(403)
 
     def get(self):
-        d=Settings.objects().first()
-        self.write({'phase':d.phase})
+        self.write({'phase':str(phase)})
 
     def post(self):
         d=Settings.objects().first()
