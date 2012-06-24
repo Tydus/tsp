@@ -1,40 +1,45 @@
 
-from mongoengine import *
-from common import JsonRequestHandler,leafHandler,Settings
-from user import Professor,Student,User
+from model import Professor,Student,User,Settings
+from common import JsonRequestHandler,leafHandler,phase
+from tornado.web import HTTPError
 from bson import ObjectId
+from json import dumps
 
-# Model
-class Task(Document):
-    name=StringField(required=True)
-    description=StringField()
-    professor=ReferenceField(Professor,required=True)
-    students=ListField(ReferenceField(Student))
-    applyTo=ReferenceField(Student)
-    
-# View
 @leafHandler(r'''/addtask''')
 class hAddTask(JsonRequestHandler):
     def post(self):
-        phase=Settings.objects().first().phase
+        u=self.get_current_user()
+        if u.__class__!=Professor:
+            raise HTTPError(403)
+
         if phase!=0:
             return self.write({'err':'Not Your Turn'})
 
-        try:
-            user=Professor.objects(username=self.get_secure_cookie('u')).first()
-        except:
-            return self.write({'err':'No Such User'})
-
-        t=self.get_secure_cookie('t')
-
-        if t!='pro':
-            return self.write({'err':'Access Denied'})
-
         name=self.get_argument('name')
         desc=self.get_argument('desc')
+        
+        type1=self.get_argument('type1')
+        type2=self.get_argument('type2')
+        source=self.get_argument('source')
 
-        Task(name=name,description=desc,professor=user,students=[]).save()
-        return self.write({})
+
+        rol=dumps(dict(
+                name=name,
+                desc=desc,
+                type1=type1,
+                type2=type2,
+                source=source,
+                professor=user.realname,
+                title=user.title,
+                direction=user.direction,
+        ))
+        try:
+            file('subjects.lst','a').write(rol)
+        except:
+            raise HTTPError(500,'Cannot write to subjects.lst')
+
+        Task(name=name,professor=user).save()
+        return self.write(rol)
 
 @leafHandler(r'''/task''')
 class hTask(JsonRequestHandler):
