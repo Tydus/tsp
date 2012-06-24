@@ -4,6 +4,7 @@ from common import JsonRequestHandler,leafHandler,phase
 from tornado.web import HTTPError
 from bson import ObjectId
 from json import dumps
+from operator import itemgetter
 
 @leafHandler(r'''/addtask''')
 class hAddTask(JsonRequestHandler):
@@ -53,18 +54,12 @@ class hTask(JsonRequestHandler):
             t={
                 'id':str(i.id),
                 'name':i.name,
-                'desc':i.description,
-                'prof':i.professor.realname,
-                'stu':[{'name':x.realname,'username':x.username} for x in i.students],
+                'selected_by':[{'realname':x.realname,'username':x.username} for x in i.selected_by],
+                'applied_to':{'realname':i.applied_to.realname,'username':i.applied_to.username},
                 }
-            if i.applyTo:
-                t['apply']={'name':i.applyTo.realname,'username':i.applyTo.username}
             l.append(t)
 
-        if self.get_argument('filter',None)=='unassigned':
-            l=[i for i in l if i['stu']==[]]
-
-        return self.write({'task':sorted(l,key=lambda x:x['name'])})
+        return self.write({'task':sorted(l,key=itemgetter('name'))})
 
     def post(self):
         phase=Settings.objects().first().phase
