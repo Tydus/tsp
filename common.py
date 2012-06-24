@@ -19,7 +19,7 @@ TTL=15*60 # 15min
 class SessionStorage():
 
     randomSession=lambda: sha1(str(ObjectId())).digest()
-    ss=lambda: self.__dict__['_sessions']
+    ss=lambda: self.__dict__['__sessions']
 
     def __init__(self):
         self.__sessions={}
@@ -28,10 +28,14 @@ class SessionStorage():
         if key==None:
             return None
         # Get User by Session, and update TTL
-        if ss().has_key(key) and ss[key]['ttl']>=time():
-            ss()[key]['ttl']=time()+TTL
-            return ss[key]['user']
-        else
+        if ss().has_key(key):
+            if ss()[key]['ttl']>=time():
+                ss()[key]['ttl']=time()+TTL
+                return ss[key]['user']
+            else:
+                del ss()[key]
+                return None
+        else:
             return None
 
     def createSession(self,user):
@@ -57,5 +61,7 @@ def leafHandler(path):
 
 class JsonRequestHandler(RequestHandler):
     def get_current_user(self):
-        return sessions[self.get_secure_cookie('session')]
+        u=sessions[self.get_secure_cookie('session')]['user']
+        u.reload()
+        return u
 
