@@ -1,12 +1,25 @@
+# -*- coding: utf-8 -*-
 
-from mongoengine import *
-from common import JsonRequestHandler,leafHandler,Settings
-from user import Student
-from task import Task
+################################################################################
+#                 Graduation Design Subject Double-Choose System               #
+#                               Background Components                          #
+#                                                                              #
+#   Author: Tydus Ken <Tydus@Tydus.org>                                        #
+#   Written: June. 2012                                                        #
+#                                                                              #
+################################################################################
 
-# View
+from model import User,Admin,Settings
+from common import JsonRequestHandler,leafHandler
+
+
 @leafHandler(r'''/phase''')
 class Phase(JsonRequestHandler):
+
+    def prepare(self):
+        if get_current_user().__class__!=Admin:
+            raise HTTPError(403)
+
     def get(self):
         d=Settings.objects().first()
         self.write({'phase':d.phase})
@@ -16,14 +29,4 @@ class Phase(JsonRequestHandler):
         d.phase+=1
         d.save()
         self.write({'phase':d.phase})
-
-
-@leafHandler(r'''/student''')
-class Student_(JsonRequestHandler):
-    def get(self):
-        l=[]
-        for i in Student.objects(applied=None):
-            l.append({'username':i.username,'name':i.realname})
-
-        return self.write({'student':l})
 
