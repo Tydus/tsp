@@ -9,7 +9,7 @@ Authors:
 Prerequisities:
     Linux kernel 2.6+
     Python 2.6+ (with setuptools)
-    Nginx 0.7+ (must be compiled with --with-http-sub-module)
+    Nginx 0.7+
     MongoDB 1.6+
 
 Install:
