@@ -14,7 +14,7 @@ class Task(Document):
     
 # View
 @leafHandler(r'''/addtask''')
-class AddTask(JsonRequestHandler):
+class hAddTask(JsonRequestHandler):
     def post(self):
         phase=Settings.objects().first().phase
         if phase!=0:
@@ -37,7 +37,7 @@ class AddTask(JsonRequestHandler):
         return self.write({})
 
 @leafHandler(r'''/task''')
-class Task_(JsonRequestHandler):
+class hTask(JsonRequestHandler):
     def get(self):
         l=[]
         for i in Task.objects:

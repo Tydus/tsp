@@ -16,7 +16,7 @@ from common import JsonRequestHandler,leafHandler
 
 # View
 @leafHandler(r'''/login''')
-class Login(JsonRequestHandler):
+class hLogin(JsonRequestHandler):
     def post(self):
         u=User.objects(username=self.get_argument('username')).first()
         if not u:
@@ -29,7 +29,7 @@ class Login(JsonRequestHandler):
         return self.write({'type':u.__class__.__name__})
 
 @leafHandler(r'''/logout''')
-class Logout(JsonRequestHandler):
+class hLogout(JsonRequestHandler):
     @authenticated
     def post(self):
         self.deleteSession(self.get_secure_cookie('sid'))
@@ -37,7 +37,7 @@ class Logout(JsonRequestHandler):
         return self.write({})
 
 @leafHandler(r'''/me''')
-class Me(JsonRequestHandler):
+class hMe(JsonRequestHandler):
     @authenticated
     def get(self):
         u=get_current_user()

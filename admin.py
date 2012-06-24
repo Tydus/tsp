@@ -14,7 +14,7 @@ from common import JsonRequestHandler,leafHandler,phase
 
 
 @leafHandler(r'''/phase''')
-class Phase(JsonRequestHandler):
+class hPhase(JsonRequestHandler):
 
     def prepare(self):
         if get_current_user().__class__!=Admin:
