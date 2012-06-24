@@ -28,17 +28,17 @@ class Login(JsonRequestHandler):
         self.set_secure_cookie('sid',sid)
         return self.write({'type':u.__class__.__name__})
 
-@authenticated
 @leafHandler(r'''/logout''')
 class Logout(JsonRequestHandler):
+    @authenticated
     def post(self):
         self.deleteSession(self.get_secure_cookie('sid'))
         self.clear_cookie('sid')
         return self.write({})
 
-@authenticated
 @leafHandler(r'''/me''')
 class Me(JsonRequestHandler):
+    @authenticated
     def get(self):
         u=get_current_user()
         if not u:
