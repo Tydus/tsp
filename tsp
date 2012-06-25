@@ -14,7 +14,7 @@ from tornado.httpclient import AsyncHTTPClient
 from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 
-from common import *
+from util import *
 import admin,task,user
 
 def strtime(tm=None):

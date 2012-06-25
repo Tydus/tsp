@@ -1,6 +1,6 @@
 
 from model import Professor,Student,User,Settings
-from common import JsonRequestHandler,leafHandler,phase
+from util import JsonRequestHandler,leafHandler,phase
 from tornado.web import HTTPError
 from bson import ObjectId
 from json import dumps

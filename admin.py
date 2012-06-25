@@ -10,7 +10,7 @@
 ################################################################################
 
 from model import User,Admin,Settings,Professor,Student
-from common import JsonRequestHandler,leafHandler,phase,resetDB,passwordHash
+from util import JsonRequestHandler,leafHandler,phase,resetDB,passwordHash
 from tornado.web import HTTPError
 
 class AdminRequestHandler(JsonRequestHandler):
