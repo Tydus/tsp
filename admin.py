@@ -9,10 +9,8 @@
 #                                                                              #
 ################################################################################
 
-from model import User,Admin,Settings
-from common import JsonRequestHandler,leafHandler,phase
-
-
+from model import User,Admin,Settings,Professor,Student
+from common import JsonRequestHandler,leafHandler,phase,resetDB
 from tornado.web import HTTPError
 
 class AdminRequestHandler(JsonRequestHandler):
@@ -30,4 +28,51 @@ class hPhase(AdminRequestHandler):
         d.phase+=1
         d.save()
         self.write({'phase':d.phase})
+
+
+@leafHandler(r'''/import''')
+class hImport(AdminRequestHandler):
+    def post(self):
+
+        t=request.get_argument('type').lower()
+
+        from csv import reader
+        from StringIO import StringIO
+
+        b=request.files[0].body
+        r=reader(StringIO(b))
+
+        # Strip first 2 lines
+        r.next()
+        r.next()
+
+        # Import Data to DB
+        if t='student':
+            for i in r:
+                d=zip([
+                    'foo',
+                    'username',
+                    'realname',
+                    'cls',
+                    'cls_index',
+                    'department',
+                    ], i)
+                del d['foo']
+                d['password']=d['username']
+                Student(**d).save()
+        elif t=='professor':
+            for i in r:
+                d=zip([
+                    'foo',
+                    'username',
+                    'realname',
+                    'title',
+                    'direction',
+                    'department',
+                    ], i)
+                del d['foo']
+                d['password']=d['username']
+                Professor(**d).save()
+        else:
+            raise HTTPError(400)
 
