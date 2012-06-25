@@ -20,6 +20,7 @@ class User(Document,EmbeddedDocument):
     realname=StringField(required=True)                   # 姓名
 
 class Student(User):
+    department=StringField(required=True)                 # 专业
     cls=StringField(required=True)                        # 班级
     cls_index=IntField(required=True)                     # 班内序号
 
