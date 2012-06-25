@@ -36,6 +36,23 @@ class hLogout(JsonRequestHandler):
         self.clear_cookie('sid')
         return self.write({})
 
+@leafHandler(r'''/chpasswd''')
+class hChPasswd(JsonRequestHandler):
+    @authenticated
+    def post(self):
+        pw=self.get_argument('password')
+        newpw=self.get_argument('new_password')
+
+        if pw!=u.password:
+            return self.write({'err':'Old password mismatch'})
+        if not newpw:
+            return self.write({'err':'No new password'})
+
+        u=get_current_user()
+        u.password=newpw
+        u.save()
+        self.write({})
+
 @leafHandler(r'''/me''')
 class hMe(JsonRequestHandler):
     @authenticated
