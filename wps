@@ -1,7 +1,7 @@
 
 Common
-    Login                       P   /login      username=<>&password=<>
-    Logout                      P   /logout     null
+x   Login                       P   /login      username=<>&password=<>
+x   Logout                      P   /logout     null
     Show Student                G   /student
         (Filter)
 x   Show Subject                G   /subject
