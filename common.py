@@ -82,3 +82,20 @@ class Phase(object):
         self.__doc.reload()
         return self.__doc.phase!=rhs
 phase=Phase()
+
+
+def resetDB(name,host,port,username,password):
+    ''' DANGER: THIS WILL RESET DATABASE '''
+
+    # FIXME: Authenticate may break
+    conn=Connection(host=host,port=port)
+
+    # TODO: Do Backup stuffs here
+    conn.copy_database(name,name+'_'+"_".join(map(str,localtime()[:5])),username=username,password=password)
+
+    # Drop Database
+    conn.drop_database(name)
+
+    # Reinitialize Database
+    Settings(phase=0).save()
+
