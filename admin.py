@@ -10,7 +10,7 @@
 ################################################################################
 
 from model import User,Admin,Settings,Professor,Student
-from common import JsonRequestHandler,leafHandler,phase,resetDB
+from common import JsonRequestHandler,leafHandler,phase,resetDB,passwordHash
 from tornado.web import HTTPError
 
 class AdminRequestHandler(JsonRequestHandler):
@@ -58,7 +58,7 @@ class hImport(AdminRequestHandler):
                     'department',
                     ], i)
                 del d['foo']
-                d['password']=d['username']
+                d['password']=passwordHash(d['username'],d['username'])
                 Student(**d).save()
         elif t=='professor':
             for i in r:
@@ -71,7 +71,7 @@ class hImport(AdminRequestHandler):
                     'department',
                     ], i)
                 del d['foo']
-                d['password']=d['username']
+                d['password']=passwordHash(d['username'],d['username'])
                 Professor(**d).save()
         else:
             raise HTTPError(400)

@@ -99,3 +99,9 @@ def resetDB(name,host,port,username,password):
     # Reinitialize Database
     Settings(phase=0).save()
 
+
+def passwordHash(username,password):
+    from hashlib import sha1
+    H=lambda x:sha1(x).hexdigest()
+    return H(password+H(username))
+    
