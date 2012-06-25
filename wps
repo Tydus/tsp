@@ -1,0 +1,20 @@
+
+Common
+    Show Student(Filter)
+    Show Subject(Filter)
+    Change PW
+
+Admin
+x   Import
+x   Phase
+?   Reset
+    Assign Student to Subject
+
+
+Professor
+x   Add Subject
+    Approve Student in Subject
+
+Student
+    Select Subject
+
