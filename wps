@@ -1,7 +1,9 @@
 
 Common
-    Show Student(Filter)
-    Show Subject(Filter)
+    Show Student
+        (Filter)
+x   Show Subject
+        (Filter)
 x   Change PW
 
 Admin
