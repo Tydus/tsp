@@ -13,13 +13,15 @@ from model import User,Admin,Settings
 from common import JsonRequestHandler,leafHandler,phase
 
 
-@leafHandler(r'''/phase''')
-class hPhase(JsonRequestHandler):
+from tornado.web import HTTPError
 
+class AdminRequestHandler(JsonRequestHandler):
     def prepare(self):
         if get_current_user().__class__!=Admin:
             raise HTTPError(403)
 
+@leafHandler(r'''/phase''')
+class hPhase(AdminRequestHandler):
     def get(self):
         self.write({'phase':str(phase)})
 
