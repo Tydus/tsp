@@ -41,6 +41,4 @@ class hMe(JsonRequestHandler):
     @authenticated
     def get(self):
         u=get_current_user()
-        if not u:
-            return self.write({'err':'No such user'})
         return self.write({'username':u.username,'name':u.realname})
