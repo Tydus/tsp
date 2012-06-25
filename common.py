@@ -59,3 +59,23 @@ class hMe(JsonRequestHandler):
     def get(self):
         u=get_current_user()
         return self.write({'username':u.username,'name':u.realname})
+
+@leafHandler(r'''/subject''')
+class hSubject(JsonRequestHandler):
+    def get(self):
+        l=[]
+        for i in Task.objects:
+            t={
+                'id':str(i.id),
+                'name':i.name,
+                'selected_by':[{'realname':x.realname,'username':x.username} for x in i.selected_by],
+                'applied_to':{'realname':i.applied_to.realname,'username':i.applied_to.username},
+                }
+            l.append(t)
+
+        return self.write({'task':sorted(l,key=itemgetter('name'))})
+
+@leafHandler(r'''/student''')
+class hStudent(JsonRequestHandler):
+    def get(self):
+        pass

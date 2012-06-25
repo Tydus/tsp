@@ -16,7 +16,7 @@ x   Phase                       GP  /phase      null
 
 
 Professor
-x   Add Subject                 P   /subject    name=<>&desc=<>&type1=<>&type2=<>&source=<>
+x   Add Subject                 P   /add        name=<>&desc=<>&type1=<>&type2=<>&source=<>
     Approve Student in Subject  P   /approve    subject=<SubjectID>&student=<StudentID>
 
 Student

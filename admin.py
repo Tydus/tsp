@@ -30,6 +30,15 @@ class hPhase(AdminRequestHandler):
         self.write({'phase':d.phase})
 
 
+@leafHandler(r'''/reset''')
+class hReset(AdminRequestHandler):
+    def post(self):
+        password=self.get_argument('password')
+        if password!=get_current_user().password:
+            raise HTTPError(403)
+        resetDB()
+        self.write({})
+
 @leafHandler(r'''/import''')
 class hImport(AdminRequestHandler):
     def post(self):
