@@ -78,4 +78,18 @@ class hSubject(JsonRequestHandler):
 @leafHandler(r'''/student''')
 class hStudent(JsonRequestHandler):
     def get(self):
-        pass
+        l=[]
+        for i in Student.objects:
+            t={
+                'username':i.username,
+                'realname':i.realname,
+                'cls':i.cls,
+                'cls_index':i.cls_index,
+                'selected':i.selected.id,
+                'applied_to':i.applied_to.id,
+                'excluded':i.excluded,
+                }
+            l.append(t)
+
+        return self.write({'task':sorted(l,key=itemgetter('username'))})
+
