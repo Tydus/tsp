@@ -20,5 +20,5 @@ x   Add Subject                 P   /add        name=<>&desc=<>&type1=<>&type2=<
     Approve Student in Subject  P   /approve    subject=<SubjectID>&student=<StudentID>
 
 Student
-    Select Subject              P   /select     subject=<SubjectId>
+x   Select Subject              P   /select     subject=<SubjectId>
 

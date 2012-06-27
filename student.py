@@ -20,22 +20,33 @@ from operator import itemgetter
 class hSelect(JsonRequestHandler):
     @authenticated([Student],[1,3])
     def post(self):
-        if not User.objects(username=self.get_secure_cookie('u')).first():
-            return self.write({'err':'No Such User'})
+        subject=self.get_argument('subject')
 
-        t=self.get_secure_cookie('t')
+        u=self.current_user
 
-        task=self.get_argument('task')
+        s=Subject.objects(id=ObjectId(subject)).first()
+        if not s:
+            return self.write({'err':'Subject not Exist'})
 
-        s=Student.objects(username=self.get_secure_cookie('u')).first()
-
-        d=Task.objects(id=ObjectId(task)).first()
-        if not d:
-            return self.write({'err':'Task not Exist'})
+        ret={}
 
         # Clear Currently Selected
-        Task.objects.update(pull__students=s)
+        if u.selected:
+            old_s=u.selected
+            #u.selected=None
+            old_s.selected_by.remove(u)
+            old_s.save()
+            ret['dropped']=old_s.id
 
-        d.reload()
-        d.students.append(s)
-        d.save()
+        # Beware if old_s==s
+        s.reload()
+
+        # Select New
+        u.selected=s
+        s.selected_by.append(u)
+
+        s.save()
+        u.save()
+
+        ret['selected']=s.id
+        return ret
