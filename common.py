@@ -65,6 +65,15 @@ class hSubject(JsonRequestHandler):
             t={
                 'id':str(i.id),
                 'name':i.name,
+                'type1':i.type1,
+                'type2':i.type2,
+                'source':i.source,
+                'professor':{
+                    'realname':i.professor.realname,
+                    'title':i.professor.title,
+                    'direction':i.professor.direction,
+                },
+                   
                 'selected_by':[{'realname':x.realname,'username':x.username} for x in i.selected_by],
                 'applied_to':{'realname':i.applied_to.realname,'username':i.applied_to.username},
                 }

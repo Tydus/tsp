@@ -43,6 +43,11 @@ class Admin(User):
 # Subject
 class Subject(Document,EmbeddedDocument):
     name=StringField(required=True)                          # 课题名
+    desc=StringField(required=True)
+    type1=StringField(required=True)                         # 分类1
+    type2=StringField(required=True)                         # 分类2
+    source=StringField(required=True)                        # 题目来源
+
     professor=EmbeddedDocumentField(Professor,required=True) # 导师
     selected_by=ListField(EmbeddedDocumentField(Student))    # 待选学生
     applied_to=EmbeddedDocumentField(Student)                # 选中学生

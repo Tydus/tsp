@@ -26,33 +26,21 @@ class hAdd(JsonRequestHandler):
 
         name=self.get_argument('name')
         desc=self.get_argument('desc')
-        
         type1=self.get_argument('type1')
         type2=self.get_argument('type2')
         source=self.get_argument('source')
 
-
-        t=Task(name=name,professor=user)
-
-        rol=dumps(dict(
+        Subject(dict(
                 id=str(t.id),
                 name=name,
                 desc=desc,
                 type1=type1,
                 type2=type2,
                 source=source,
-                professor=user.realname,
-                title=user.title,
-                direction=user.direction,
-        ))
-        try:
-            file('subjects.lst','a').write(rol)
-        except:
-            raise HTTPError(500,'Cannot write to subjects.lst')
+                professor=user,
+        )).save()
 
-        t.save()
-
-        return self.write(rol)
+        return self.write({})
 
 @leafHandler(r'''/approve''')
 class hApprove(JsonRequestHandler):
