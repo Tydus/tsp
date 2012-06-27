@@ -13,6 +13,7 @@ from tornado.web import RequestHandler
 from bson import ObjectId
 from hashlib import sha1
 from time import time
+from functools import wraps
 
 # Session Storage
 TTL=15*60 # 15min
@@ -105,3 +106,20 @@ def passwordHash(username,password):
     H=lambda x:sha1(x).hexdigest()
     return H(password+H(username))
     
+def authenticated(roles=[Student,Professor,Admin],phases=range(6)):
+    def decorator(method):
+        """Decorate methods with this to require that the user be logged in."""
+        @wraps(method)
+        def wrapper(self, *args, **kwargs):
+            if not self.current_user:
+                raise HTTPError(403)
+
+            if phase not in phases:
+                return self.write({'err':'not your turn'})
+
+            if self.current_user.__class_ not in roles:
+                return HTTPError(403)
+
+            return method(self, *args, **kwargs)
+        return wrapper
+    return decorator
