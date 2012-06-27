@@ -64,7 +64,7 @@ def leafHandler(path):
 
 class JsonRequestHandler(RequestHandler):
     def get_current_user(self):
-        u=sessions[self.get_secure_cookie('sid')]['user']
+        u=sessions[self.get_cookie('sid')]['user']
         u.reload()
         return u
 

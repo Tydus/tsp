@@ -10,7 +10,6 @@
 ################################################################################
 
 from model import User,Student,Professor,Admin
-from util import JsonRequestHandler,leafHandler,authenticated
 from util import JsonRequestHandler,leafHandler,authenticated,sessions
 
 @leafHandler(r'''/login''')
@@ -23,14 +22,14 @@ class hLogin(JsonRequestHandler):
             return self.write({'err':'Password mismatch'})
 
         sid=sessions.createSession(u)
-        self.set_secure_cookie('sid',sid)
+        self.set_cookie('sid',sid)
         return self.write({'type':u.__class__.__name__})
 
 @leafHandler(r'''/logout''')
 class hLogout(JsonRequestHandler):
     @authenticated()
     def post(self):
-        self.deleteSession(self.get_secure_cookie('sid'))
+        self.deleteSession(self.get_cookie('sid'))
         self.clear_cookie('sid')
         return self.write({})
 
