@@ -86,7 +86,7 @@ class Phase(object):
 phase=Phase()
 
 
-def resetDB(name,host,port,username,password):
+def resetDB(name='tsp',host='localhost',port='27017',username='tsp',password='tsp'):
     ''' DANGER: THIS WILL RESET DATABASE '''
 
     # FIXME: Authenticate may break
