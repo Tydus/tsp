@@ -58,25 +58,37 @@ class hAdd(JsonRequestHandler):
 class hApprove(JsonRequestHandler):
     @authenticated([Professor],[2,4])
     def post(self):
-        if not User.objects(username=self.get_secure_cookie('u')).first():
-            return self.write({'err':'No Such User'})
 
-        task=self.get_argument('task')
-        choice=self.get_argument('choice')
+        subject=self.get_argument('subject')
+        student=self.get_argument('student')
 
-        d=Task.objects(id=ObjectId(task)).first()
-        if not d:
-            return self.write({'err':'Task not Exist'})
-        c=None
-        for i in d.students:
-            if i.username==choice:
-                c=i
-        if not c:
-            return self.write({'err':'Out of Range'})
+        s=Subject.objects(id=ObjectId(subject)).first()
+        if not s:
+            return self.write({'err':'Subject not Exist'})
 
-        c.applied=d.name
-        c.save()
+        # FIXME: may break since EmbeddedDocument
+        if subject.professor!=self.current_user:
+            return self.write({'err':'Not your Subject'})
 
-        d.applyTo=c
-        d.student=[]
-        d.save()
+        '''
+        # Make sure the selected student exists
+        exists=False
+        for u in s.selected_by:
+            if u.name==student:
+                exists=True
+        if not Exists:
+            return self.write({'err':'No such student'})
+        '''
+
+        for u in s.selected_by:
+            u.selected=None
+            if u.name==student:
+                # You are the one!
+                s.applied_to=u
+                u.applied_to=s
+            u.save()
+
+        s.selected_by=[]
+        s.save()
+
+        self.write({})
