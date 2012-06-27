@@ -10,11 +10,8 @@
 ################################################################################
 
 from model import User,Student,Professor,Admin
-from tornado.web import authenticated
-from util import JsonRequestHandler,leafHandler
+from util import JsonRequestHandler,leafHandler,authenticated
 
-
-# View
 @leafHandler(r'''/login''')
 class hLogin(JsonRequestHandler):
     def post(self):
@@ -30,7 +27,7 @@ class hLogin(JsonRequestHandler):
 
 @leafHandler(r'''/logout''')
 class hLogout(JsonRequestHandler):
-    @authenticated
+    @authenticated()
     def post(self):
         self.deleteSession(self.get_secure_cookie('sid'))
         self.clear_cookie('sid')
@@ -38,7 +35,7 @@ class hLogout(JsonRequestHandler):
 
 @leafHandler(r'''/chpasswd''')
 class hChPasswd(JsonRequestHandler):
-    @authenticated
+    @authenticated()
     def post(self):
         pw=self.get_argument('password')
         newpw=self.get_argument('new_password')
@@ -55,7 +52,7 @@ class hChPasswd(JsonRequestHandler):
 
 @leafHandler(r'''/me''')
 class hMe(JsonRequestHandler):
-    @authenticated
+    @authenticated()
     def get(self):
         u=get_current_user()
         return self.write({'username':u.username,'name':u.realname})
