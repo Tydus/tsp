@@ -13,16 +13,13 @@ from model import User,Admin,Settings,Professor,Student
 from util import JsonRequestHandler,leafHandler,phase,resetDB,passwordHash
 from tornado.web import HTTPError
 
-class AdminRequestHandler(JsonRequestHandler):
-    def prepare(self):
-        if get_current_user().__class__!=Admin:
-            raise HTTPError(403)
-
 @leafHandler(r'''/phase''')
-class hPhase(AdminRequestHandler):
+class hPhase(JsonRequestHandler):
+    @authenticated([Admin])
     def get(self):
         self.write({'phase':str(phase)})
 
+    @authenticated([Admin])
     def post(self):
         d=Settings.objects().first()
         d.phase+=1
@@ -31,7 +28,8 @@ class hPhase(AdminRequestHandler):
 
 
 @leafHandler(r'''/reset''')
-class hReset(AdminRequestHandler):
+class hReset(JsonRequestHandler):
+    @authenticated([Admin])
     def post(self):
         password=self.get_argument('password')
         if password!=get_current_user().password:
@@ -40,7 +38,8 @@ class hReset(AdminRequestHandler):
         self.write({})
 
 @leafHandler(r'''/import''')
-class hImport(AdminRequestHandler):
+class hImport(JsonRequestHandler):
+    @authenticated([Admin],[0])
     def post(self):
 
         t=request.get_argument('type').lower()
