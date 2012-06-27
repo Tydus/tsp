@@ -45,7 +45,7 @@ class hChPasswd(JsonRequestHandler):
         if not newpw:
             return self.write({'err':'No new password'})
 
-        u=get_current_user()
+        u=self.current_user
         u.password=newpw
         u.save()
         self.write({})
@@ -54,7 +54,7 @@ class hChPasswd(JsonRequestHandler):
 class hMe(JsonRequestHandler):
     @authenticated()
     def get(self):
-        u=get_current_user()
+        u=self.current_user
         return self.write({'username':u.username,'name':u.realname})
 
 @leafHandler(r'''/subject''')

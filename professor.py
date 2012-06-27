@@ -20,7 +20,7 @@ from operator import itemgetter
 class hAdd(JsonRequestHandler):
     @authenticated([Professor],[0])
     def post(self):
-        u=self.get_current_user()
+        u=self.current_user
         if u.__class__!=Professor:
             raise HTTPError(403)
 

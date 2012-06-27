@@ -32,7 +32,7 @@ class hReset(JsonRequestHandler):
     @authenticated([Admin])
     def post(self):
         password=self.get_argument('password')
-        if password!=get_current_user().password:
+        if password!=self.current_user.password:
             raise HTTPError(403)
         resetDB()
         self.write({})
