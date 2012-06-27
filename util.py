@@ -93,7 +93,7 @@ def resetDB(name='tsp',host='localhost',port='27017',username='tsp',password='ts
     # FIXME: Authenticate may break
     conn=Connection(host=host,port=port)
 
-    # TODO: Do Backup stuffs here
+    # Backup
     conn.copy_database(name,name+'_'+"_".join(map(str,localtime()[:5])),username=username,password=password)
 
     # Drop Database
@@ -101,7 +101,7 @@ def resetDB(name='tsp',host='localhost',port='27017',username='tsp',password='ts
 
     # Reinitialize Database
     Settings(phase=0).save()
-
+    Admin(username='admin',password=passwordHash('admin','admin')).save()
 
 def passwordHash(username,password):
     from hashlib import sha1
