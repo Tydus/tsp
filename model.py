@@ -56,3 +56,4 @@ class Subject(Document,EmbeddedDocument):
 class Settings(Document):
     phase=IntField(required=True)                            # 系统进行阶段
 
+connect('tsp')

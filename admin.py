@@ -10,7 +10,7 @@
 ################################################################################
 
 from model import User,Admin,Settings,Professor,Student
-from util import JsonRequestHandler,leafHandler,phase,resetDB,passwordHash
+from util import JsonRequestHandler,leafHandler,phase,resetDB,passwordHash,authenticated
 from tornado.web import HTTPError
 
 @leafHandler(r'''/phase''')
@@ -55,7 +55,7 @@ class hImport(JsonRequestHandler):
         r.next()
 
         # Import Data to DB
-        if t='student':
+        if t=='student':
             for i in r:
                 d=zip([
                     'foo',

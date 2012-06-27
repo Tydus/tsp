@@ -15,7 +15,7 @@ from tornado.httpserver import HTTPServer
 from tornado.ioloop import IOLoop
 
 from util import *
-import admin,task,user
+import common,student,professor,admin
 
 def strtime(tm=None):
     return "%04d-%02d-%02d %02d:%02d:%02d"%gmtime(tm or time())[:6]
@@ -68,6 +68,7 @@ def main():
     # Calc verbosity
     verbosity=args.verbose-args.quiet
 
+    '''
     # Connect to DB
     try:
         connect(         args.db_name,
@@ -83,6 +84,7 @@ def main():
             args.db_name,
            ))
         exit(-1)
+    '''
 
     # Run Server
 

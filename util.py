@@ -14,6 +14,7 @@ from bson import ObjectId
 from hashlib import sha1
 from time import time
 from functools import wraps
+from model import Settings,Student,Professor,Admin
 
 # Session Storage
 TTL=15*60 # 15min
