@@ -88,4 +88,29 @@ class hImport(JsonRequestHandler):
 class hMatch(JsonRequestHandler):
     @authenticated([Admin],[5])
     def post(self):
-        pass
+
+        subject=self.get_argument('subject')
+        student=self.get_argument('student')
+
+        s=Subject.objects(id=ObjectId(subject)).first()
+        if not s:
+            return self.write({'err':'Subject not Exist'})
+        if s.applied_to:
+            return self.write({'err':'The Subject is applied to '+s.applied_to.name})
+
+        u=Student.objects(id=ObjectId(student)).first()
+        if not u:
+            return self.write({'err':'Student not Exist'})
+        if u.applied_to:
+            return self.write({'err':'the Student is approved by '+u.applied_to.name})
+
+        # Match Straightly
+        s.selected_by=[]
+        s.applied_to=u
+        u.selected=None
+        u.applied_to=s
+
+        s.save()
+        u.save()
+
+        self.write({})

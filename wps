@@ -12,7 +12,7 @@ Admin
 x   Import                      P   /import     type=<student|professor>&(csv file)
 x   Phase                       GP  /phase      null
 ?   Reset DB                    P   /reset      password=<>
-    Assign Student to Subject   P   /assign     subject=<SubjectID>&student=<StudentID>
+x   Assign Student to Subject   P   /assign     subject=<SubjectID>&student=<StudentID>
 
 
 Professor
