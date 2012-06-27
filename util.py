@@ -106,7 +106,7 @@ def passwordHash(username,password):
     H=lambda x:sha1(x).hexdigest()
     return H(password+H(username))
     
-def authenticated(roles=[Student,Professor,Admin],phases=range(6)):
+def authenticated(roles=[Student,Professor,Admin],phases=range(7)):
     def decorator(method):
         """Decorate methods with this to require that the user be logged in."""
         @wraps(method)
