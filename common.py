@@ -29,7 +29,7 @@ class hLogin(JsonRequestHandler):
 class hLogout(JsonRequestHandler):
     @authenticated()
     def post(self):
-        self.deleteSession(self.get_cookie('sid'))
+        sessions.deleteSession(self.get_cookie('sid'))
         self.clear_cookie('sid')
         return self.write({})
 

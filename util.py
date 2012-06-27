@@ -9,7 +9,7 @@
 #                                                                              #
 ################################################################################
 
-from tornado.web import RequestHandler
+from tornado.web import RequestHandler,HTTPError
 from bson import ObjectId
 from hashlib import sha1
 from time import time
@@ -23,7 +23,7 @@ class SessionStorage():
     def __init__(self):
         self.__dict__['__sessions']={}
 
-    def __getattr__(self,key):
+    def __getitem__(self,key):
         if key==None:
             return None
 
@@ -64,7 +64,11 @@ def leafHandler(path):
 
 class JsonRequestHandler(RequestHandler):
     def get_current_user(self):
-        u=sessions[self.get_cookie('sid')]['user']
+        import pdb
+        pdb.set_trace()
+        u=sessions[self.get_cookie('sid')]
+        if not u:
+            return None
         u.reload()
         return u
 
