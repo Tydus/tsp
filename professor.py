@@ -10,7 +10,7 @@
 ################################################################################
 
 from model import Professor,Student,User,Settings
-from util import JsonRequestHandler,leafHandler,phase
+from util import JsonRequestHandler,leafHandler,authenticated
 from tornado.web import HTTPError
 from bson import ObjectId
 from json import dumps
@@ -18,13 +18,11 @@ from operator import itemgetter
 
 @leafHandler(r'''/add''')
 class hAdd(JsonRequestHandler):
+    @authenticated([Professor],[0])
     def post(self):
         u=self.get_current_user()
         if u.__class__!=Professor:
             raise HTTPError(403)
-
-        if phase!=0:
-            return self.write({'err':'Not Your Turn'})
 
         name=self.get_argument('name')
         desc=self.get_argument('desc')
@@ -58,15 +56,13 @@ class hAdd(JsonRequestHandler):
 
 @leafHandler(r'''/approve''')
 class hApprove(JsonRequestHandler):
+    @authenticated([Professor],[2,4])
     def post(self):
         if not User.objects(username=self.get_secure_cookie('u')).first():
             return self.write({'err':'No Such User'})
 
         task=self.get_argument('task')
         choice=self.get_argument('choice')
-
-        if phase not in [2,4]:
-            return self.write({'err':'Not Your Turn'})
 
         d=Task.objects(id=ObjectId(task)).first()
         if not d:

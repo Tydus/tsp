@@ -10,7 +10,7 @@
 ################################################################################
 
 from model import Professor,Student,User,Settings
-from util import JsonRequestHandler,leafHandler,phase
+from util import JsonRequestHandler,leafHandler,authenticated
 from tornado.web import HTTPError
 from bson import ObjectId
 from json import dumps
@@ -18,17 +18,14 @@ from operator import itemgetter
 
 @leafHandler(r'''/select''')
 class hSelect(JsonRequestHandler):
+    @authenticated([Student],[1,3])
     def post(self):
-        phase=Settings.objects().first().phase
         if not User.objects(username=self.get_secure_cookie('u')).first():
             return self.write({'err':'No Such User'})
 
         t=self.get_secure_cookie('t')
 
         task=self.get_argument('task')
-
-        if phase not in [1,3]:
-            return self.write({'err':'Not Your Turn'})
 
         s=Student.objects(username=self.get_secure_cookie('u')).first()
 
