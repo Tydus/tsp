@@ -50,14 +50,14 @@ class hChPasswd(JsonRequestHandler):
         u.save()
         self.write({})
 
-@leafHandler(r'''/me''')
-class hMe(JsonRequestHandler):
+@leafHandler(r'''/profile''')
+class hProfile(JsonRequestHandler):
     @authenticated()
     def get(self):
         u=self.current_user
         return self.write({
             'username':u.username,
-            'name':u.realname,
+            'realname':u.realname,
             'role':u.__class__.__name__,
         })
 

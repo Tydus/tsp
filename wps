@@ -2,6 +2,7 @@
 Common
 x   Login                       P   /login      username=<>&password=<>                      {role:Admin|Student|Professor}
 x   Logout                      P   /logout     null                                         {}
+x   Profile                     G   /profile        {username,realname,role:Admin|Student|Professor}
 x   Show Student                G   /student    
                                                     {student:[{
                                                         username,
