@@ -36,6 +36,7 @@ x   Assign Student to Subject   P   /assign     subject=<SubjectID>&student=<Stu
 
 Professor
 x   Add Subject                 P   /add        name=<>&desc=<>&type1=<>&type2=<>&source=<>  {}
+    Mod Subject                 P   /modify     id=<>&name=<>&...                            {}
 x   Approve Student in Subject  P   /approve    subject=<SubjectID>&student=<StudentID>      {}
 
 Student
