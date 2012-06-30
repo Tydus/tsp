@@ -53,6 +53,9 @@ class SessionStorage():
         if ss.has_key(session):
             del ss[session]
 
+    def clear(self):
+        self.__dict__['__sessions']={}
+
 sessions=SessionStorage()
 
 # Request Handler

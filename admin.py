@@ -10,7 +10,7 @@
 ################################################################################
 
 from model import User,Admin,Settings,Professor,Student
-from util import JsonRequestHandler,leafHandler,phase,resetDB,passwordHash,authenticated
+from util import JsonRequestHandler,leafHandler,phase,resetDB,passwordHash,authenticated,sessions
 from tornado.web import HTTPError
 
 @leafHandler(r'''/phase''')
@@ -35,6 +35,8 @@ class hReset(JsonRequestHandler):
         if password!=self.current_user.password:
             raise HTTPError(403)
         resetDB()
+        sessions.clear()
+
         self.write({})
 
 @leafHandler(r'''/import''')
