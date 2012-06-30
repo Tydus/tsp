@@ -1,24 +1,24 @@
 
 Common
-x   Login                       P   /login      username=<>&password=<>
-x   Logout                      P   /logout     null
-x   Show Student                G   /student
+x   Login                       P   /login      username=<>&password=<>                      {role:Admin|Student|Professor}
+x   Logout                      P   /logout     null                                         {}
+x   Show Student                G   /student        {student:[{username,realname,cls,cls_index,selected,applied_to,excluded}]}
         (Filter)
-x   Show Subject                G   /subject
+x   Show Subject                G   /subject        {subject:[{id,name,type1,type2,source,professor:{realname,title,direction}}]}
         (Filter)
-x   Change PW                   P   /chpasswd   password=<>&new_password=<>
+x   Change PW                   P   /chpasswd   password=<>&new_password=<>                  {}
 
 Admin
-x   Import                      P   /import     type=<student|professor>&(csv file)
-x   Phase                       GP  /phase      null
-?   Reset DB                    P   /reset      password=<>
-x   Assign Student to Subject   P   /assign     subject=<SubjectID>&student=<StudentID>
+x   Import                      P   /import     type=<student|professor>&(csv file)          {}
+x   Phase                       GP  /phase      null                                         {phase:N}
+?   Reset DB                    P   /reset      password=<>                                  {}
+x   Assign Student to Subject   P   /assign     subject=<SubjectID>&student=<StudentID>      {??}
 
 
 Professor
-x   Add Subject                 P   /add        name=<>&desc=<>&type1=<>&type2=<>&source=<>
-x   Approve Student in Subject  P   /approve    subject=<SubjectID>&student=<StudentID>
+x   Add Subject                 P   /add        name=<>&desc=<>&type1=<>&type2=<>&source=<>  {}
+x   Approve Student in Subject  P   /approve    subject=<SubjectID>&student=<StudentID>      {}
 
 Student
-x   Select Subject              P   /select     subject=<SubjectId>
+x   Select Subject              P   /select     subject=<SubjectId>                          {selected(,dropped)}
 
