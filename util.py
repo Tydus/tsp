@@ -12,9 +12,11 @@
 from tornado.web import RequestHandler,HTTPError
 from bson import ObjectId
 from hashlib import sha1
-from time import time
+from time import time,localtime
 from functools import wraps
-from model import Settings,Student,Professor,Admin
+from model import Settings,Student,Professor,Admin,refreshConnection
+from pymongo import Connection
+from mongoengine import connect
 
 # Session Storage
 TTL=15*60 # 15min
@@ -91,21 +93,31 @@ class Phase(object):
 phase=Phase()
 
 
-def resetDB(name='tsp',host='localhost',port='27017',username='tsp',password='tsp'):
+def resetDB(name='tsp',host='localhost',port=27017,username=None,password=None):
     ''' DANGER: THIS WILL RESET DATABASE '''
 
+    import pymongo
+
     # FIXME: Authenticate may break
-    conn=Connection(host=host,port=port)
+    conn=pymongo.Connection(host=host,port=port)
 
-    # Backup
-    conn.copy_database(name,name+'_'+"_".join(map(str,localtime()[:5])),username=username,password=password)
 
-    # Drop Database
-    conn.drop_database(name)
+    if name in conn.database_names():
+        # Backup
+        conn.copy_database(name,name+'_'+"_".join(map(str,localtime()[:5])),username=username,password=password)
 
-    # Reinitialize Database
+        # Drop Database
+        conn.drop_database(name)
+    
+    connect(name,reconnect=True)
+    # (Re)initialize Database
+
+    Admin(
+            username='admin',
+            password=passwordHash('admin','admin'),
+            realname='administrator',
+         ).save()
     Settings(phase=0).save()
-    Admin(username='admin',password=passwordHash('admin','admin')).save()
 
 def passwordHash(username,password):
     from hashlib import sha1
