@@ -23,7 +23,7 @@ class hLogin(JsonRequestHandler):
 
         sid=sessions.createSession(u)
         self.set_cookie('sid',sid)
-        return self.write({'type':u.__class__.__name__})
+        return self.write({'role':u.__class__.__name__})
 
 @leafHandler(r'''/logout''')
 class hLogout(JsonRequestHandler):
@@ -55,7 +55,11 @@ class hMe(JsonRequestHandler):
     @authenticated()
     def get(self):
         u=self.current_user
-        return self.write({'username':u.username,'name':u.realname})
+        return self.write({
+            'username':u.username,
+            'name':u.realname,
+            'role':u.__class__.__name__,
+        })
 
 @leafHandler(r'''/subject''')
 class hSubject(JsonRequestHandler):
