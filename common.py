@@ -40,12 +40,13 @@ class hChPasswd(JsonRequestHandler):
         pw=self.get_argument('password')
         newpw=self.get_argument('new_password')
 
+        u=self.current_user
+
         if pw!=u.password:
             return self.write({'err':'Old password mismatch'})
         if not newpw:
             return self.write({'err':'No new password'})
 
-        u=self.current_user
         u.password=newpw
         u.save()
         self.write({})
