@@ -2,9 +2,27 @@
 Common
 x   Login                       P   /login      username=<>&password=<>                      {role:Admin|Student|Professor}
 x   Logout                      P   /logout     null                                         {}
-x   Show Student                G   /student        {student:[{username,realname,cls,cls_index,selected,applied_to,excluded}]}
+x   Show Student                G   /student    
+                                                    {student:[{
+                                                        username,
+                                                        realname,
+                                                        cls,
+                                                        cls_index,
+                                                        selected:id,
+                                                        applied_to:id,
+                                                        excluded,
+                                                    }]}
         (Filter)
-x   Show Subject                G   /subject        {subject:[{id,name,type1,type2,source,professor:{realname,title,direction}}]}
+x   Show Subject                G   /subject        {subject:[{
+                                                        id,
+                                                        name,
+                                                        type1,
+                                                        type2,
+                                                        source,
+                                                        selected_by:[{username,realname}],
+                                                        applied_to:{username,realname},
+                                                        professor:{realname,title,direction},
+                                                    }]}
         (Filter)
 x   Change PW                   P   /chpasswd   password=<>&new_password=<>                  {}
 

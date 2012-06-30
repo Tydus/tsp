@@ -79,7 +79,7 @@ class hSubject(JsonRequestHandler):
                 }
             l.append(t)
 
-        return self.write({'task':sorted(l,key=itemgetter('name'))})
+        return self.write({'subject':sorted(l,key=itemgetter('name'))})
 
 @leafHandler(r'''/student''')
 class hStudent(JsonRequestHandler):
@@ -97,5 +97,5 @@ class hStudent(JsonRequestHandler):
                 }
             l.append(t)
 
-        return self.write({'task':sorted(l,key=itemgetter('username'))})
+        return self.write({'student':sorted(l,key=itemgetter('username'))})
 
