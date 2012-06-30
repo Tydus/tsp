@@ -69,8 +69,6 @@ def leafHandler(path):
 
 class JsonRequestHandler(RequestHandler):
     def get_current_user(self):
-        import pdb
-        pdb.set_trace()
         u=sessions[self.get_cookie('sid')]
         if not u:
             return None
