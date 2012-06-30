@@ -34,15 +34,12 @@ class hSelect(JsonRequestHandler):
         if s.applied_to:
             return self.write({'err':'The Subject is applied to '+s.applied_to.name})
 
-        ret={}
-
         # Clear Currently Selected
         if u.selected:
             old_s=u.selected
             #u.selected=None
             old_s.selected_by.remove(u)
             old_s.save()
-            ret['dropped']=old_s.id
 
         # Beware if old_s==s
         s.reload()
@@ -54,5 +51,4 @@ class hSelect(JsonRequestHandler):
         s.save()
         u.save()
 
-        ret['selected']=s.id
-        return ret
+        self.write({})

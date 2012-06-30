@@ -20,5 +20,5 @@ x   Add Subject                 P   /add        name=<>&desc=<>&type1=<>&type2=<
 x   Approve Student in Subject  P   /approve    subject=<SubjectID>&student=<StudentID>      {}
 
 Student
-x   Select Subject              P   /select     subject=<SubjectId>                          {selected(,dropped)}
+x   Select Subject              P   /select     subject=<SubjectId>                          {}
 
