@@ -15,7 +15,8 @@ from mongoengine import *
 class User(Document,EmbeddedDocument):
     meta={'allow_inheritance':True}
 
-    username=StringField(required=True,primary_key=True)  # 用户名（学号，工号）
+    username=StringField(required=True)                   # 用户名（学号，工号）
+    #username=StringField(required=True,primary_key=True)  # 用户名（学号，工号）
     password=StringField(required=True)                   # 密码
     realname=StringField(required=True)                   # 姓名
 
