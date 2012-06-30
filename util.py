@@ -14,7 +14,7 @@ from bson import ObjectId
 from hashlib import sha1
 from time import time,localtime
 from functools import wraps
-from model import Settings,Student,Professor,Admin,refreshConnection
+from model import Settings,Student,Professor,Admin
 from pymongo import Connection
 from mongoengine import connect
 
