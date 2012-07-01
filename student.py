@@ -9,7 +9,7 @@
 #                                                                              #
 ################################################################################
 
-from model import Professor,Student,User,Settings
+from model import Professor,Student,User,Settings,Subject
 from util import JsonRequestHandler,leafHandler,authenticated
 from tornado.web import HTTPError
 from bson import ObjectId
@@ -38,7 +38,7 @@ class hSelect(JsonRequestHandler):
         if u.selected:
             old_s=u.selected
             #u.selected=None
-            old_s.selected_by.remove(u)
+            old_s.selected_by=[i for i in old_s.selected_by if i.id!=u.id]
             old_s.save()
 
         # Beware if old_s==s
