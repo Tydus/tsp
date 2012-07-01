@@ -1,7 +1,7 @@
 
 Common
 x   Login                       P   /login      username=<>&password=<>                      {role:Admin|Student|Professor}
-x   Logout                      P   /logout     null                                         {}
+x   Logout                      P   /logout     foo=bar                                      {}
 x   Profile                     G   /profile        {username,realname,role:Admin|Student|Professor}
 x   Show Student                G   /student    
                                                     {student:[{
@@ -28,9 +28,9 @@ x   Show Subject                G   /subject        {subject:[{
 x   Change PW                   P   /chpasswd   password=<>&new_password=<>                  {}
 
 Admin
-x   Import                      P   /import     type=<student|professor>&(csv file)          {}
-x   Phase                       GP  /phase      null                                         {phase:N}
-?   Reset DB                    P   /reset      password=<>                                  {}
+x   Import                      P   /import     type=<student|professor>&("file","xxx.csv",csv file)          {}
+x   Phase                       GP  /phase      foo=bar                                      {phase:N}
+x   Reset DB                    P   /reset      password=<>                                  {}
 x   Assign Student to Subject   P   /assign     subject=<SubjectID>&student=<StudentID>      {??}
 
 
