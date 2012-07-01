@@ -24,7 +24,7 @@ class hPhase(JsonRequestHandler):
     def post(self):
         d=Settings.objects().first()
 
-        if d.phase in [1,3]:
+        if d.phase in [2,4]:
             clearSelection()
 
         d.phase+=1
