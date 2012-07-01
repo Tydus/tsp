@@ -9,7 +9,7 @@
 #                                                                              #
 ################################################################################
 
-from model import Professor,Student,User,Settings
+from model import Professor,Student,User,Subject
 from util import JsonRequestHandler,leafHandler,authenticated
 from tornado.web import HTTPError
 from bson import ObjectId
@@ -21,8 +21,6 @@ class hAdd(JsonRequestHandler):
     @authenticated([Professor],[0])
     def post(self):
         u=self.current_user
-        if u.__class__!=Professor:
-            raise HTTPError(403)
 
         name=self.get_argument('name')
         desc=self.get_argument('desc')
@@ -30,15 +28,14 @@ class hAdd(JsonRequestHandler):
         type2=self.get_argument('type2')
         source=self.get_argument('source')
 
-        Subject(dict(
-                id=str(t.id),
+        Subject(
                 name=name,
                 desc=desc,
                 type1=type1,
                 type2=type2,
                 source=source,
-                professor=user,
-        )).save()
+                professor=u,
+        ).save()
 
         return self.write({})
 
