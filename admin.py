@@ -44,50 +44,47 @@ class hReset(JsonRequestHandler):
 class hImport(JsonRequestHandler):
     @authenticated([Admin],[0])
     def post(self):
-
-        t=self.get_argument('type').lower()
-
         from csv import reader
         from StringIO import StringIO
 
-        b=self.request.files['file'][0]['body']
-        r=reader(StringIO(b))
+        for t,v in self.request.files.items():
+            b=v[0]['body']
+            r=reader(StringIO(b))
 
-        # Strip first 2 lines
-        r.next()
-        r.next()
+            # Strip first 2 lines
+            r.next()
+            r.next()
 
-        # Import Data to DB
-        if t=='student':
-            for i in r:
-                d=dict(zip([
-                    'foo',
-                    'username',
-                    'realname',
-                    'cls',
-                    'cls_index',
-                    'department',
-                    ], i))
-                del d['foo']
-                d['password']=passwordHash(d['username'],d['username'])
-                Student(**d).save()
-            self.write({})
-        elif t=='professor':
-            for i in r:
-                d=dict(zip([
-                    'foo',
-                    'username',
-                    'realname',
-                    'title',
-                    'direction',
-                    'department',
-                    ], i))
-                del d['foo']
-                d['password']=passwordHash(d['username'],d['username'])
-                Professor(**d).save()
-            self.write({})
-        else:
-            raise HTTPError(400)
+            # Import Data to DB
+            if t=='student':
+                for i in r:
+                    d=dict(zip([
+                        'foo',
+                        'username',
+                        'realname',
+                        'cls',
+                        'cls_index',
+                        'department',
+                        ], i))
+                    del d['foo']
+                    d['password']=passwordHash(d['username'],d['username'])
+                    Student(**d).save()
+            elif t=='professor':
+                for i in r:
+                    d=dict(zip([
+                        'foo',
+                        'username',
+                        'realname',
+                        'title',
+                        'direction',
+                        'department',
+                        ], i))
+                    del d['foo']
+                    d['password']=passwordHash(d['username'],d['username'])
+                    Professor(**d).save()
+            else:
+                raise HTTPError(400)
+        self.write({})
 
 @leafHandler(r'''/match''')
 class hMatch(JsonRequestHandler):
