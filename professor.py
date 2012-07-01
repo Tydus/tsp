@@ -54,26 +54,24 @@ class hApprove(JsonRequestHandler):
         if s.professor.username!=self.current_user.username:
             return self.write({'err':'Not your Subject'})
 
-        '''
-        # Make sure the selected student exists
-        exists=False
-        for u in s.selected_by:
-            if u.name==student:
-                exists=True
-        if not Exists:
-            return self.write({'err':'No such student'})
-        '''
+        if s.selected_by==[]:
+            return self.write({'err':'Cannot Change Subject Approved in Previous Phase'})
+
+        # Clear previous approvement
+        if s.applied_to:
+            u=Student.objects(username=s.applied_to.username).first()
+            u.applied_to=None
+            u.save()
+            s.applied_to=None
 
         for u_embedded in s.selected_by:
             u=Student.objects(username=u_embedded.username).first()
-            u.selected=None
             if u.username==student:
                 # You are the one!
                 s.applied_to=u
                 u.applied_to=s
             u.save()
 
-        s.selected_by=[]
         s.save()
 
         self.write({})

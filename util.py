@@ -136,3 +136,8 @@ def authenticated(roles=[Student,Professor,Admin],phases=range(7)):
             return method(self, *args, **kwargs)
         return wrapper
     return decorator
+
+def clearSelection():
+    Student.objects.update(set__selected=None)
+    Subject.objects.update(set__selected_by=[])
+
