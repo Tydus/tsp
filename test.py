@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-from util import passwordHash
+from util import passwordHash,resetDB
 import json_rpc
 
 Verbose=True
@@ -42,8 +42,12 @@ class Session(json_rpc.Json_RPC):
         except Exception,e:
             return (criteria==Error,"%s: %s"%(str(type(e)),e.message))
 
+# Reset DB
+resetDB()
 
+# Test Script Starts Here
 admin=Session()
+
 admin.test('/login','Admin Login',{"role":"Admin"},username='admin',password=passwordHash('admin','admin'))
 admin.test('/profile','Admin profile',lambda r:r['role']=='Admin')
 admin.test('/chpasswd','Admin Change Password',{},password=passwordHash('admin','admin'),new_password=passwordHash('admin','test'))
