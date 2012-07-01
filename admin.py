@@ -10,7 +10,7 @@
 ################################################################################
 
 from model import User,Admin,Settings,Professor,Student
-from util import JsonRequestHandler,leafHandler,phase,resetDB,passwordHash,authenticated,sessions
+from util import JsonRequestHandler,leafHandler,phase,resetDB,passwordHash,authenticated,sessions,clearSelection
 from tornado.web import HTTPError
 
 @leafHandler(r'''/phase''')
@@ -23,6 +23,10 @@ class hPhase(JsonRequestHandler):
     @authenticated([Admin])
     def post(self):
         d=Settings.objects().first()
+
+        if d.phase in [1,3]:
+            clearSelection()
+
         d.phase+=1
         d.save()
         self.write({'phase':d.phase})
