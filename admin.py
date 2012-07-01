@@ -15,13 +15,16 @@ from tornado.web import HTTPError
 
 @leafHandler(r'''/phase''')
 class hPhase(JsonRequestHandler):
-    @authenticated([Admin])
     def get(self):
         d=Settings.objects().first()
         self.write({'phase':d.phase})
 
     @authenticated([Admin])
     def post(self):
+        password=self.get_argument('password')
+        if password!=self.current_user.password:
+            raise HTTPError(403)
+
         d=Settings.objects().first()
 
         if d.phase in [2,4]:
