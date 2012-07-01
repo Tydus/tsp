@@ -68,7 +68,7 @@ class hProfile(JsonRequestHandler):
             ret['cls']=u.cls
             ret['cls_index']=u.cls_index
             ret['selected']=str(u.selected.id) if u.selected else None
-                ret['applied_to']=str(u.applied_to.id) if u.applied_to else None
+            ret['applied_to']=str(u.applied_to.id) if u.applied_to else None
             ret['excluded']=u.excluded
         elif u.__class__==Professor:
             ret['department']=u.department
