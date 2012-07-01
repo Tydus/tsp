@@ -132,7 +132,7 @@ stu2.test('/select','Change Selection',{},subject=subjectids[0])
 stu3=Session()
 stu3.test('/login','Student Login',{"role":"Student"},username='09212003',password=passwordHash('09212003','09212003'))
 stu3.test('/select','Select',{},subject=subjectids[1])
-stu1.test('/student','Show Student',lambda x:reduce(lambda c,i:c+bool(i['selected']),x['student'],0)==3)
+stu1.test('/student','Check Student Selection',lambda x:reduce(lambda c,i:c+bool(i['selected']),x['student'],0)==3)
 
 studentnames=[]
 def getStudentNames(x):
@@ -150,11 +150,18 @@ admin.test('/phase','Advance to Phase 2',{'phase':2},foo='bar')
 stu1.test('/select','Select in phase 2',Error,subject=subjectids[0])
 pro2.test('/approve',"Approve other Professor's Subject",Error,subject=subjectids[0],student=studentnames[0][0])
 pro1.test('/approve',"Approve",{},subject=subjectids[0],student=studentnames[0][0])
+admin.test('/subject','Check if Approved',lambda x:x['subject'][0]['applied_to']['username']=studentnames[0][0])
+pro1.test('/approve',"Change Approvement",{},subject=subjectids[0],student=studentnames[0][1])
+stu2.test('/subject','Check if Approvement Changed',lambda x:x['subject'][0]['applied_to']['username']=studentnames[0][1])
 pro2.test('/approve',"Approve None",{},subject=subjectids[1],student=None)
+pro3.test('/subject','Check None Approvement',lambda x:x['subject'][1]['applied_to']==None)
 
-admin.test('/subject','Show Subject',lambda x:x['subject'][0]['applied_to'] and not x['subject'][1]['applied_to'])
-stu1.test('/student','Show Student',lambda x:reduce(lambda c,i:c+bool(i['applied_to']),x['student'],0)==1)
+pro3.test('/subject','Check Selection',lambda x:x['subject'][0]['selected_by'] and x['subject'][1]['selected_by'])
+stu1.test('/student',"Check Student's Approvement",lambda x:reduce(lambda c,i:c+bool(i['applied_to']),x['student'],0)==1)
+stu1.test('/student','Check Student Selection',lambda x:reduce(lambda c,i:c+bool(i['selected']),x['student'],0)==3)
 
 admin.test('/phase','Advance to Phase 3',{'phase':3},foo='bar')
+stu1.test('/student','Check Student Selection Clearation',lambda x:reduce(lambda c,i:c+bool(i['selected']),x['student'],0)==0)
+stu2.test('/subject','Check Approvement Clearation',lambda x:reduce(lambda c,i:c+(i['selected_by']!=[]),x['subject'],0)==0)
 # Phase 3
 
