@@ -66,14 +66,14 @@ class hApprove(JsonRequestHandler):
 
         for u_embedded in s.selected_by:
             u=Student.objects(username=u_embedded.username).first()
-            u.selected=None
+            #u.selected=None
             if u.username==student:
                 # You are the one!
                 s.applied_to=u
                 u.applied_to=s
             u.save()
 
-        s.selected_by=[]
+        #s.selected_by=[]
         s.save()
 
         self.write({})
