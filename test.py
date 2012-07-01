@@ -150,8 +150,11 @@ admin.test('/phase','Advance to Phase 2',{'phase':2},foo='bar')
 stu1.test('/select','Select in phase 2',Error,subject=subjectids[0])
 pro2.test('/approve',"Approve other Professor's Subject",Error,subject=subjectids[0],student=studentnames[0][0])
 pro1.test('/approve',"Approve",{},subject=subjectids[0],student=studentnames[0][0])
-pro2.test('/approve',"Approve",{},subject=subjectids[1],student=studentnames[1][0])
+pro2.test('/approve',"Approve None",{},subject=subjectids[1],student=None)
 
-admin.test('/subject','Show Subject',lambda x:x['subject'][0]['applied_to'] and x['subject'][1]['applied_to'])
+admin.test('/subject','Show Subject',lambda x:x['subject'][0]['applied_to'] and not x['subject'][1]['applied_to'])
+stu1.test('/student','Show Student',lambda x:reduce(lambda c,i:c+bool(i['applied_to']),x['student'],0)==1)
 
-stu1.test('/student','Show Student',lambda x:reduce(lambda c,i:c+bool(i['applied_to']),x['student'],0)==2)
+admin.test('/phase','Advance to Phase 3',{'phase':3},foo='bar')
+# Phase 3
+
