@@ -76,21 +76,15 @@ class JsonRequestHandler(RequestHandler):
         return u
 
 class Phase(object):
-    def __init__(self):
-        object.__init__(self)
-        self.__doc=Settings.objects().first()
-
     def __str__(self):
-        self.__doc.reload()
-        return str(self.__doc.phase)
+        return str(Settings.objects().first().phase)
 
     def __eq__(self,rhs):
-        self.__doc.reload()
-        return self.__doc.phase==rhs
+        return Settings.objects().first().phase==rhs
 
     def __ne__(self,rhs):
-        self.__doc.reload()
-        return self.__doc.phase!=rhs
+        return Settings.objects().first().phase!=rhs
+    
 phase=Phase()
 
 
