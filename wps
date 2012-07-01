@@ -1,9 +1,9 @@
 
 Common
-x   Login                       P   /login      username=<>&password=<>                      {role:Admin|Student|Professor}
-x   Logout                      P   /logout     foo=bar                                      {}
-x   Profile                     G   /profile        {username,realname,role:Admin|Student|Professor}
-x   Show Student                G   /student    
+t   Login                       P   /login      username=<>&password=<>                      {role:Admin|Student|Professor}
+t   Logout                      P   /logout     foo=bar                                      {}
+t   Profile                     G   /profile        {username,realname,role:Admin|Student|Professor}
+t   Show Student                G   /student    
                                                     {student:[{
                                                         username,
                                                         realname,
@@ -14,7 +14,7 @@ x   Show Student                G   /student
                                                         excluded,
                                                     }]}
         (Filter)
-x   Show Subject                G   /subject        {subject:[{
+t   Show Subject                G   /subject        {subject:[{
                                                         id,
                                                         name,
                                                         type1,
@@ -25,20 +25,20 @@ x   Show Subject                G   /subject        {subject:[{
                                                         professor:{realname,title,direction},
                                                     }]}
         (Filter)
-x   Change PW                   P   /chpasswd   password=<>&new_password=<>                  {}
+t   Change PW                   P   /chpasswd   password=<>&new_password=<>                  {}
 
 Admin
-x   Import                      P   /import     professor=xxx.csv&student=xxx.csv            {}
-x   Phase                       GP  /phase      foo=bar                                      {phase:N}
-x   Reset DB                    P   /reset      password=<>                                  {}
+t   Import                      P   /import     professor=xxx.csv&student=xxx.csv            {}
+t   Phase                       GP  /phase      foo=bar                                      {phase:N}
+t   Reset DB                    P   /reset      password=<>                                  {}
 x   Assign Student to Subject   P   /assign     subject=<SubjectID>&student=<StudentID>      {??}
 
 
 Professor
-x   Add Subject                 P   /add        name=<>&desc=<>&type1=<>&type2=<>&source=<>  {}
+t   Add Subject                 P   /add        name=<>&desc=<>&type1=<>&type2=<>&source=<>  {}
     Mod Subject                 P   /modify     id=<>&name=<>&...                            {}
 x   Approve Student in Subject  P   /approve    subject=<SubjectID>&student=<StudentID>      {}
 
 Student
-x   Select Subject              P   /select     subject=<SubjectId>                          {}
+t   Select Subject              P   /select     subject=<SubjectId>                          {}
 
