@@ -5,6 +5,7 @@
 from util import passwordHash,resetDB
 import json_rpc
 from urllib2 import HTTPError
+from operator import itemgetter
 
 Verbose=False
 
@@ -57,6 +58,8 @@ class Session(json_rpc.Json_RPC):
 resetDB()
 
 # Test Script Starts Here
+
+# Phase 0
 admin=Session()
 
 admin.test('/login','Admin Login',{"role":"Admin"},username='admin',password=passwordHash('admin','admin'))
@@ -96,3 +99,35 @@ pro3.test('/add','Professor Add Subject',{},name='s32',desc='This is subject32\n
 
 stu1=Session()
 stu1.test('/login','Student Login',{"role":"Student"},username='09212001',password=passwordHash('09212001','09212001'))
+
+subjectids=[]
+def getSubjectIds(x):
+    global subjectids
+    try:
+        subjectids=map(itemgetter('id'),x['subject'])
+        return True
+    except Exception:
+        return False
+
+stu1.test('/student','Show Student',lambda x:x.get('student') and x['student'][0].get('username'))
+stu1.test('/subject','Show Subject',getSubjectIds)
+pro2.test('/subject','Show Subject',getSubjectIds)
+admin.test('/subject','Show Subject',getSubjectIds)
+
+stu1.test('/select','Select in phase 0',StatusCode(403),subject=subjectids[0])
+
+admin.test('/phase','Advance to Phase 1',{},foo='bar')
+
+# Phase 1
+stu1.test('/select','Select',{},subject=subjectids[0])
+stu2=Session()
+stu2.test('/login','Student Login',{"role":"Student"},username='09212002',password=passwordHash('09212002','09212002'))
+stu2.test('/select','Select',{},subject=subjectids[1])
+stu2.test('/select','Change Selection',{},subject=subjectids[0])
+
+admin.test('/subject','Show Subject',lambda x: len(x['subject'][0]['selected_by'])==2)
+
+admin.test('/phase','Advance to Phase 2',{},foo='bar')
+# Phase 2
+stu1.test('/select','Select in phase 0',StatusCode(403),subject=subjectids[0])
+
