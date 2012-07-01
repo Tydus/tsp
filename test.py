@@ -130,9 +130,28 @@ stu2.test('/login','Student Login',{"role":"Student"},username='09212002',passwo
 stu2.test('/select','Select',{},subject=subjectids[1])
 stu2.test('/select','Change Selection',{},subject=subjectids[0])
 
-admin.test('/subject','Show Subject',lambda x: len(x['subject'][0]['selected_by'])==2)
+stu3=Session()
+stu3.test('/login','Student Login',{"role":"Student"},username='09212003',password=passwordHash('09212003','09212003'))
+stu3.test('/select','Select',{},subject=subjectids[1])
+
+studentnames=[]
+def getStudentNames(x):
+    global studentnames
+    try:
+        studentnames=[map(itemgetter('username'),i['selected_by']) for i in x['subject']]
+        return True
+    except Exception:
+        return False
+
+admin.test('/subject','Show Subject',getStudentNames)
 
 admin.test('/phase','Advance to Phase 2',{'phase':2},foo='bar')
 # Phase 2
 stu1.test('/select','Select in phase 2',Error,subject=subjectids[0])
+pro2.test('/approve',"Approve other Professor's Subject",Error,subject=subjectids[0],student=studentnames[0][0])
+pro1.test('/approve',"Approve",{},subject=subjectids[0],student=studentnames[0][0])
+pro2.test('/approve',"Approve",{},subject=subjectids[1],student=studentnames[1][0])
 
+admin.test('/subject','Show Subject',lambda x:x['subject'][0]['applied_to'] and x['subject'][1]['applied_to'])
+
+stu1.test('/student','Show Student',lambda x:reduce(lambda c,i:c+bool(i['applied_to']),x['student'])==2)
