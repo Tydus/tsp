@@ -2,7 +2,25 @@
 Common
 t   Login                       P   /login      username=<>&password=<>                      {role:Admin|Student|Professor}
 t   Logout                      P   /logout     foo=bar                                      {}
-t   Profile                     G   /profile        {username,realname,role:Admin|Student|Professor}
+t   Profile                     G   /profile        {
+                                                        username,
+                                                        realname,
+                                                        role:Admin|Student|Professor,
+                                                        (if student:
+                                                            department,
+                                                            cls,
+                                                            cls_index,
+                                                            selected:id,
+                                                            applied_to:id,
+                                                            excluded,
+                                                        )
+                                                        (if professor:
+                                                            department,
+                                                            title,
+                                                            direction,
+                                                        )
+                                                    }
+
 t   Show Student                G   /student    
                                                     {student:[{
                                                         username,

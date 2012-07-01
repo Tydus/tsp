@@ -57,11 +57,25 @@ class hProfile(JsonRequestHandler):
     @authenticated()
     def get(self):
         u=self.current_user
-        return self.write({
+
+        ret={
             'username':u.username,
             'realname':u.realname,
             'role':u.__class__.__name__,
-        })
+        }
+        if u.__class__==Student:
+            ret['department']=u.department
+            ret['cls']=u.cls
+            ret['cls_index']=u.cls_index
+            ret['selected']=str(u.selected.id) if u.selected else None
+                ret['applied_to']=str(u.applied_to.id) if u.applied_to else None
+            ret['excluded']=u.excluded
+        elif u.__class__==Professor:
+            ret['department']=u.department
+            ret['title']=u.title
+            ret['direction']=u.direction
+
+        self.write(ret)
 
 @leafHandler(r'''/subject''')
 class hSubject(JsonRequestHandler):
@@ -97,8 +111,8 @@ class hStudent(JsonRequestHandler):
                 'realname':i.realname,
                 'cls':i.cls,
                 'cls_index':i.cls_index,
-                'selected':i.selected.id if i.selected else None,
-                'applied_to':i.applied_to.id if i.applied_to else None,
+                'selected':str(i.selected.id) if i.selected else None,
+                'applied_to':str(i.applied_to.id) if i.applied_to else None,
                 'excluded':i.excluded,
                 }
             l.append(t)
