@@ -45,12 +45,12 @@ class hImport(JsonRequestHandler):
     @authenticated([Admin],[0])
     def post(self):
 
-        t=request.get_argument('type').lower()
+        t=self.get_argument('type').lower()
 
         from csv import reader
         from StringIO import StringIO
 
-        b=request.files[0].body
+        b=self.request.files['file'][0]['body']
         r=reader(StringIO(b))
 
         # Strip first 2 lines
@@ -60,30 +60,32 @@ class hImport(JsonRequestHandler):
         # Import Data to DB
         if t=='student':
             for i in r:
-                d=zip([
+                d=dict(zip([
                     'foo',
                     'username',
                     'realname',
                     'cls',
                     'cls_index',
                     'department',
-                    ], i)
+                    ], i))
                 del d['foo']
                 d['password']=passwordHash(d['username'],d['username'])
                 Student(**d).save()
+            self.write({})
         elif t=='professor':
             for i in r:
-                d=zip([
+                d=dict(zip([
                     'foo',
                     'username',
                     'realname',
                     'title',
                     'direction',
                     'department',
-                    ], i)
+                    ], i))
                 del d['foo']
                 d['password']=passwordHash(d['username'],d['username'])
                 Professor(**d).save()
+            self.write({})
         else:
             raise HTTPError(400)
 
