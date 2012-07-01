@@ -46,6 +46,8 @@ class Session(json_rpc.Json_RPC):
                 return (ret.has_key('err'),str(ret))
             elif isinstance(criteria,dict):
                 return (ret==criteria,str(ret))
+            elif isinstance(criteria,StatusCode):
+                return (False,str(ret))
             else: # Callable
                 return (criteria(ret),str(ret))
         except HTTPError,e:
@@ -114,9 +116,9 @@ stu1.test('/subject','Show Subject',getSubjectIds)
 pro2.test('/subject','Show Subject',getSubjectIds)
 admin.test('/subject','Show Subject',getSubjectIds)
 
-stu1.test('/select','Select in phase 0',StatusCode(403),subject=subjectids[0])
+stu1.test('/select','Select in phase 0',Error,subject=subjectids[0])
 
-admin.test('/phase','Advance to Phase 1',{},foo='bar')
+admin.test('/phase','Advance to Phase 1',{'phase':1},foo='bar')
 
 # Phase 1
 stu1.test('/select','Select',{},subject=subjectids[0])
@@ -127,7 +129,7 @@ stu2.test('/select','Change Selection',{},subject=subjectids[0])
 
 admin.test('/subject','Show Subject',lambda x: len(x['subject'][0]['selected_by'])==2)
 
-admin.test('/phase','Advance to Phase 2',{},foo='bar')
+admin.test('/phase','Advance to Phase 2',{'phase':2},foo='bar')
 # Phase 2
-stu1.test('/select','Select in phase 0',StatusCode(403),subject=subjectids[0])
+stu1.test('/select','Select in phase 0',Error,subject=subjectids[0])
 
