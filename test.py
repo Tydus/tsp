@@ -6,8 +6,7 @@ from util import passwordHash,resetDB
 import json_rpc
 from urllib2 import HTTPError
 from operator import itemgetter
-
-Verbose=False
+from sys import argv
 
 UrlPrefix='http://localhost:8080'
 
@@ -55,6 +54,10 @@ class Session(json_rpc.Json_RPC):
                     isinstance(criteria,StatusCode) and criteria.code==e.code,
                     "HTTPError %s"%e.code
                    )
+
+
+
+Verbose=len(argv)==2 and argv[1]=='-v'
 
 # Reset DB
 resetDB()
@@ -131,5 +134,5 @@ admin.test('/subject','Show Subject',lambda x: len(x['subject'][0]['selected_by'
 
 admin.test('/phase','Advance to Phase 2',{'phase':2},foo='bar')
 # Phase 2
-stu1.test('/select','Select in phase 0',Error,subject=subjectids[0])
+stu1.test('/select','Select in phase 2',Error,subject=subjectids[0])
 
