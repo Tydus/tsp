@@ -132,6 +132,7 @@ stu2.test('/select','Change Selection',{},subject=subjectids[0])
 stu3=Session()
 stu3.test('/login','Student Login',{"role":"Student"},username='09212003',password=passwordHash('09212003','09212003'))
 stu3.test('/select','Select',{},subject=subjectids[1])
+stu1.test('/student','Show Student',lambda x:reduce(lambda c,i:c+bool(i['selected']),x['student'],0)==3)
 
 studentnames=[]
 def getStudentNames(x):
@@ -153,4 +154,4 @@ pro2.test('/approve',"Approve",{},subject=subjectids[1],student=studentnames[1][
 
 admin.test('/subject','Show Subject',lambda x:x['subject'][0]['applied_to'] and x['subject'][1]['applied_to'])
 
-stu1.test('/student','Show Student',lambda x:reduce(lambda c,i:c+bool(i['applied_to']),x['student'])==2)
+stu1.test('/student','Show Student',lambda x:reduce(lambda c,i:c+bool(i['applied_to']),x['student'],0)==2)
