@@ -9,8 +9,9 @@
 #                                                                              #
 ################################################################################
 
-from model import User,Student,Professor,Admin
+from model import User,Student,Professor,Admin,Subject
 from util import JsonRequestHandler,leafHandler,authenticated,sessions
+from operator import itemgetter
 
 @leafHandler(r'''/login''')
 class hLogin(JsonRequestHandler):
@@ -66,7 +67,7 @@ class hProfile(JsonRequestHandler):
 class hSubject(JsonRequestHandler):
     def get(self):
         l=[]
-        for i in Task.objects:
+        for i in Subject.objects:
             t={
                 'id':str(i.id),
                 'name':i.name,
@@ -80,7 +81,7 @@ class hSubject(JsonRequestHandler):
                 },
                    
                 'selected_by':[{'realname':x.realname,'username':x.username} for x in i.selected_by],
-                'applied_to':{'realname':i.applied_to.realname,'username':i.applied_to.username},
+                'applied_to':{'realname':i.applied_to.realname,'username':i.applied_to.username} if i.applied_to else None,
                 }
             l.append(t)
 
@@ -96,8 +97,8 @@ class hStudent(JsonRequestHandler):
                 'realname':i.realname,
                 'cls':i.cls,
                 'cls_index':i.cls_index,
-                'selected':i.selected.id,
-                'applied_to':i.applied_to.id,
+                'selected':i.selected.id if i.selected else None,
+                'applied_to':i.applied_to.id if i.applied_to else None,
                 'excluded':i.excluded,
                 }
             l.append(t)
