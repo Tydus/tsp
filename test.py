@@ -69,8 +69,8 @@ admin.test('/profile','Admin Profile after Reset DB',StatusCode(403))
 admin.test('/login','Admin Login',{"role":"Admin"},username='admin',password=passwordHash('admin','admin'))
 admin.test('/phase','Phase',{'phase':0})
 
-admin.test('/import','Import Student',{},file=[('file','student.csv',open('student.csv').read())])
-admin.test('/import','Import Professor',{},file=[('file','professor.csv',open('professor.csv').read())])
+admin.test('/import','Import Student',{},type='student',file=[('file','student.csv',open('student.csv').read())])
+admin.test('/import','Import Professor',{},type='professor',file=[('file','professor.csv',open('professor.csv').read())])
 
 
 
