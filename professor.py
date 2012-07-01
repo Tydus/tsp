@@ -51,8 +51,7 @@ class hApprove(JsonRequestHandler):
         if not s:
             return self.write({'err':'Subject not Exist'})
 
-        # FIXME: may break since EmbeddedDocument
-        if subject.professor!=self.current_user:
+        if s.professor.username!=self.current_user.username:
             return self.write({'err':'Not your Subject'})
 
         '''
@@ -65,9 +64,10 @@ class hApprove(JsonRequestHandler):
             return self.write({'err':'No such student'})
         '''
 
-        for u in s.selected_by:
+        for u_embedded in s.selected_by:
+            u=Student.objects(username=u_embedded.username).first()
             u.selected=None
-            if u.name==student:
+            if u.username==student:
                 # You are the one!
                 s.applied_to=u
                 u.applied_to=s
