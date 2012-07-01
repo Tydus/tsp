@@ -2,6 +2,7 @@
 
 from util import passwordHash,resetDB
 import json_rpc
+from urllib2 import HTTPError
 
 Verbose=True
 
@@ -17,16 +18,21 @@ def verbose(*args):
 class Error: pass
 ''' Predicted Error '''
 
+class StatusCode:
+    ''' HTTP Status Code '''
+    def __init__(self,code):
+        self.code=code
+
 class Session(json_rpc.Json_RPC):
     def test(self,url,description,criteria,file=None,**postData):
-        log(description,'... ')
+        log(description,'...')
         result,v=self._Go(url,description,criteria,file,**postData)
         if not result:
             log('fail\n')
             log(v,'\n')
             exit(-1)
         log('pass\n')
-        verbose(v,'\n')
+        verbose('    ',v,'\n')
 
     def _Go(self,url,description,criteria,file=None,**postData):
         try:
@@ -39,8 +45,11 @@ class Session(json_rpc.Json_RPC):
                 return (ret==criteria,str(ret))
             else: # Callable
                 return (criteria(ret),str(ret))
-        except Exception,e:
-            return (criteria==Error,"%s: %s"%(str(type(e)),e.message))
+        except HTTPError,e:
+            return (
+                    isinstance(criteria,StatusCode) and criteria.code==e.code,
+                    "HTTPError %s"%e.code
+                   )
 
 # Reset DB
 resetDB()
@@ -52,16 +61,16 @@ admin.test('/login','Admin Login',{"role":"Admin"},username='admin',password=pas
 admin.test('/profile','Admin profile',lambda r:r['role']=='Admin')
 admin.test('/chpasswd','Admin Change Password',{},password=passwordHash('admin','admin'),new_password=passwordHash('admin','test'))
 admin.test('/logout','Admin Logout',{},foo='bar')
-admin.test('/profile','Admin Profile without Login',Error)
+admin.test('/profile','Admin Profile without Login',StatusCode(403))
 admin.test('/login','Admin Login with new Pw',{"role":"Admin"},username='admin',password=passwordHash('admin','test'))
 admin.test('/reset','Reset DB',{},password=passwordHash('admin','test'))
 
-admin.test('/profile','Admin Profile after Reset DB',Error)
+admin.test('/profile','Admin Profile after Reset DB',StatusCode(403))
 admin.test('/login','Admin Login',{"role":"Admin"},username='admin',password=passwordHash('admin','admin'))
 admin.test('/phase','Phase',{'phase':0})
 
-admin.test('/import','Import Student',{},file=('file','student.csv',open('student.csv').read()))
-admin.test('/import','Import Professor',{},file=('file','professor.csv',open('professor.csv').read()))
+admin.test('/import','Import Student',{},file=[('file','student.csv',open('student.csv').read())])
+admin.test('/import','Import Professor',{},file=[('file','professor.csv',open('professor.csv').read())])
 
 
 
