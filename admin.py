@@ -17,7 +17,8 @@ from tornado.web import HTTPError
 class hPhase(JsonRequestHandler):
     @authenticated([Admin])
     def get(self):
-        self.write({'phase':str(phase)})
+        d=Settings.objects().first()
+        self.write({'phase':d.phase})
 
     @authenticated([Admin])
     def post(self):
