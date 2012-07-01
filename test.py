@@ -1,10 +1,12 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 
 from util import passwordHash,resetDB
 import json_rpc
 from urllib2 import HTTPError
 
-Verbose=True
+Verbose=False
 
 UrlPrefix='http://localhost:8080'
 
@@ -72,5 +74,25 @@ admin.test('/phase','Phase',{'phase':0})
 admin.test('/import','Import Student',{},type='student',file=[('file','student.csv',open('student.csv').read())])
 admin.test('/import','Import Professor',{},type='professor',file=[('file','professor.csv',open('professor.csv').read())])
 
+pro1=Session()
+pro1.test('/login','Professor Login',{"role":"Professor"},username='1901801001',password=passwordHash('1901801001','1901801001'))
+pro1.test('/profile','Professor profile',lambda r:r['role']=='Professor')
+pro1.test('/chpasswd','Professor Change Password',{},password=passwordHash('1901801001','1901801001'),new_password=passwordHash('1901801001','test'))
+pro1.test('/logout','Professor Logout',{},foo='bar')
+pro1.test('/login','Professor Login with new Pw',{"role":"Professor"},username='1901801001',password=passwordHash('1901801001','test'))
+pro1.test('/add','Professor Add Subject',{},name='s1',desc='This is subject1\nNewline\n',type1='1',type2='1',source='1')
+pro1.test('/add','Professor Add Subject',{},name='中文测试',desc='This is subject2\nNewline\n',type1='2',type2='2',source='1')
 
 
+pro2=Session()
+pro2.test('/login','Professor Login',{"role":"Professor"},username='1901801002',password=passwordHash('1901801002','1901801002'))
+pro2.test('/add','Professor Add Subject',{},name='s21',desc='This is subject21\nNewline\n',type1='1',type2='1',source='2')
+pro2.test('/add','Professor Add Subject',{},name='s22',desc='This is subject22\nNewline\n',type1='2',type2='1',source='2')
+
+pro3=Session()
+pro3.test('/login','Professor Login',{"role":"Professor"},username='1901801003',password=passwordHash('1901801003','1901801003'))
+pro3.test('/add','Professor Add Subject',{},name='s31',desc='This is subject31\nNewline\n',type1='2',type2='2',source='2')
+pro3.test('/add','Professor Add Subject',{},name='s32',desc='This is subject32\nNewline\n',type1='2',type2='1',source='2')
+
+stu1=Session()
+stu1.test('/login','Student Login',{"role":"Student"},username='09212001',password=passwordHash('09212001','09212001'))
