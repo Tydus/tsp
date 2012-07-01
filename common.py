@@ -97,8 +97,8 @@ class hStudent(JsonRequestHandler):
                 'realname':i.realname,
                 'cls':i.cls,
                 'cls_index':i.cls_index,
-                'selected':i.selected.id if i.selected else None,
-                'applied_to':i.applied_to.id if i.applied_to else None,
+                'selected':str(i.selected.id) if i.selected else None,
+                'applied_to':str(i.applied_to.id) if i.applied_to else None,
                 'excluded':i.excluded,
                 }
             l.append(t)
