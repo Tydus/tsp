@@ -85,10 +85,12 @@ class hSubject(JsonRequestHandler):
             t={
                 'id':str(i.id),
                 'name':i.name,
+                'desc':i.desc,
                 'type1':i.type1,
                 'type2':i.type2,
                 'source':i.source,
                 'professor':{
+                    'username':i.professor.username,
                     'realname':i.professor.realname,
                     'title':i.professor.title,
                     'direction':i.professor.direction,
