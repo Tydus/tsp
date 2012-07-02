@@ -32,7 +32,7 @@ class hSelect(JsonRequestHandler):
         if not s:
             return self.write({'err':'Subject not Exist'})
         if s.applied_to:
-            return self.write({'err':'The Subject is applied to '+s.applied_to.name})
+            return self.write({'err':'The Subject is applied to '+s.applied_to.realname})
 
         # Clear Currently Selected
         if u.selected:
