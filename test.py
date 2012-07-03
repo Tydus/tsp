@@ -194,22 +194,22 @@ pro2.test('/approve','Approve in Phase 5',Error,subject=subjectids[2],student=se
 stu1.test('/student','Check Student Selection Clearation',lambda x:reduce(lambda c,i:c+bool(i['selected']),x['student'],0)==0)
 stu2.test('/subject','Check Approvement Clearation',lambda x:reduce(lambda c,i:c+(i['selected_by']!=[]),x['subject'],0)==0)
 
-admin.test('/match','Match Assigned Student',{},subject=subjectids[2],student=selectedstudentnames[2][0])
 stu2.test('/select','Assigned Student Selecting',Error,subject=subjectids[2])
 stu3.test('/select','Select Assigned Subject',Error,subject=subjectids[0])
+admin.test('/match','Match Assigned Student',Error,subject=subjectids[2],student=selectedstudentnames[2][0])
 
 studentnames=[]
 def getAllStudentNames(x):
     global studentnames
     try:
-        studentnames=map(itemgetter('username'),i['student'])
+        studentnames=map(itemgetter('username'),x['student'])
         return True
     except Exception:
         return False
 
 admin.test('/student','Get All Student Names',getAllStudentNames)
 
-admin.test('/match','Match',subject=subjectids[3],student=selectedstudentnames[4])
+admin.test('/match','Match',{},subject=subjectids[3],student=studentnames[4])
 
 admin.test('/phase','Advance to Phase 6',{'phase':6},password=passwordHash('admin','admin'))
 # Phase 6
@@ -219,7 +219,7 @@ admin.test('/student','Show Student',getAllStudentNames)
 
 stu1.test('/select','Select in Phase 6',Error,subject=subjectids[0])
 pro2.test('/approve','Approve in Phase 6',Error,subject=subjectids[2],student=selectedstudentnames[2][0])
-admin.test('/match','Match in Phase 6',subject=subjectids[3],student=selectedstudentnames[4])
+admin.test('/match','Match in Phase 6',Error,subject=subjectids[3],student=studentnames[4])
 
 admin.test('/phase','Advance to Phase 7',Error,password=passwordHash('admin','admin'))
 
