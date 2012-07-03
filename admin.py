@@ -38,6 +38,17 @@ class hPhase(JsonRequestHandler):
         d.save()
         self.write({'phase':d.phase})
 
+@leafHandler(r'''/announce''')
+class hAnnounce(JsonRequestHandler):
+    def get(self):
+        d=Settings.objects().first()
+        self.write({'announce':d.get('announce')})
+
+    @authenticated([Admin])
+    def post(self):
+        d=Settings.objects().first()
+        d['announce']=self.get_argument('announce')
+        self.write({})
 
 @leafHandler(r'''/reset''')
 class hReset(JsonRequestHandler):
