@@ -100,11 +100,15 @@ def getSelectedStudentNames(x):
 
 # Phase 0
 admin=Session()
+
+admin.test('/announce','Show Announce',{'announce':""})
 admin.test('/login','Admin Login',{"role":"Admin"},username='admin',password=passwordHash('admin','admin'))
+admin.test('/announce','Set Announce',{},announce='Test<br>Wrap')
 admin.test('/profile','Admin profile',lambda r:r['role']=='Admin')
 admin.test('/chpasswd','Admin Change Password',{},password=passwordHash('admin','admin'),new_password=passwordHash('admin','test'))
 admin.test('/logout','Admin Logout',{},foo='bar')
 admin.test('/profile','Admin Profile without Login',StatusCode(403))
+admin.test('/announce','Show Announce',{'announce':'Test<br>Wrap'})
 admin.test('/login','Admin Login with new Pw',{"role":"Admin"},username='admin',password=passwordHash('admin','test'))
 admin.test('/reset','Reset DB',{},password=passwordHash('admin','test'))
 
