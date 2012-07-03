@@ -168,4 +168,16 @@ admin.test('/phase','Advance to Phase 3',{'phase':3},password=passwordHash('admi
 stu1.test('/student','Check Student Selection Clearation',lambda x:reduce(lambda c,i:c+bool(i['selected']),x['student'],0)==0)
 stu2.test('/subject','Check Approvement Clearation',lambda x:reduce(lambda c,i:c+(i['selected_by']!=[]),x['subject'],0)==0)
 # Phase 3
+stu2.test('/select','Assigned Student Selecting',Error,subject=subjectids[2])
+stu3.test('/select','Select Assigned Subject',Error,subject=subjectids[0])
+stu3.test('/select','Select',{},subject=subjectids[2])
+
+admin.test('/phase','Advance to Phase 4',{'phase':4},password=passwordHash('admin','admin'))
+admin.test('/subject','Get Selected Students',getStudentNames)
+# Phase 4
+pro1.test('/approve','Approve Assigned Subject',Error,subject=subjectids[0],student=None)
+pro2.test('/approve','Approve',{},subject=subjectids[2],student=studentnames[2][0])
+
+admin.test('/phase','Advance to Phase 5',{'phase':5},password=passwordHash('admin','admin'))
+# Phase 5
 
