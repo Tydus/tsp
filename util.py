@@ -73,6 +73,14 @@ class JsonRequestHandler(RequestHandler):
         u.reload()
         return u
 
+class LPRequestHandler(JsonRequestHandler):
+    ''' Long Polling '''
+    _cb=[]
+
+    @staticmethod
+    def fire_all(*args,**kwargs):
+        LPRequestHandler._cb=[i for i in LPRequestHandler._cb if i(*args,**kwargs)]
+
 class Phase(object):
     def __str__(self):
         return str(Settings.objects().first().phase)
