@@ -85,7 +85,7 @@ admin.test('/reset','Reset DB',{},password=passwordHash('admin','test'))
 
 admin.test('/profile','Admin Profile after Reset DB',StatusCode(403))
 admin.test('/login','Admin Login',{"role":"Admin"},username='admin',password=passwordHash('admin','admin'))
-admin.test('/phase','Phase',{'phase':0})
+admin.test('/phase','Show Phase',{'phase':0})
 
 admin.test('/import','Import Student and Professor',{},file=[('student','student.csv',open('student.csv').read()),('professor','professor.csv',open('professor.csv').read())])
 
@@ -121,6 +121,9 @@ def getSubjectIds(x):
     except Exception:
         return False
 
+pro1.test('/phase','Show Phase',{'phase':0})
+stu1.test('/phase','Show Phase',{'phase':0})
+
 stu1.test('/student','Show Student',lambda x:x.get('student') and x['student'][0].get('username'))
 stu1.test('/subject','Show Subject',getSubjectIds)
 pro2.test('/subject','Show Subject',getSubjectIds)
@@ -143,25 +146,25 @@ stu3.test('/login','Student Login',{"role":"Student"},username='09212003',passwo
 stu3.test('/select','Select',{},subject=subjectids[1])
 stu1.test('/student','Check Student Selection',lambda x:reduce(lambda c,i:c+bool(i['selected']),x['student'],0)==3)
 
-studentnames=[]
-def getStudentNames(x):
-    global studentnames
+selectedstudentnames=[]
+def getSelectedStudentNames(x):
+    global selectedstudentnames
     try:
-        studentnames=[map(itemgetter('username'),i['selected_by']) for i in x['subject']]
+        selectedstudentnames=[map(itemgetter('username'),i['selected_by']) for i in x['subject']]
         return True
     except Exception:
         return False
 
-admin.test('/subject','Show Subject',getStudentNames)
+admin.test('/subject','Show Subject',getSelectedStudentNames)
 
 admin.test('/phase','Advance to Phase 2',{'phase':2},password=passwordHash('admin','admin'))
 # Phase 2
 stu1.test('/select','Select in phase 2',Error,subject=subjectids[0])
-pro2.test('/approve',"Approve other Professor's Subject",Error,subject=subjectids[0],student=studentnames[0][0])
-pro1.test('/approve',"Approve",{},subject=subjectids[0],student=studentnames[0][0])
-admin.test('/subject','Check if Approved',lambda x:x['subject'][0]['applied_to']['username']==studentnames[0][0])
-pro1.test('/approve',"Change Approvement",{},subject=subjectids[0],student=studentnames[0][1])
-stu2.test('/subject','Check if Approvement Changed',lambda x:x['subject'][0]['applied_to']['username']==studentnames[0][1])
+pro2.test('/approve',"Approve other Professor's Subject",Error,subject=subjectids[0],student=selectedstudentnames[0][0])
+pro1.test('/approve',"Approve",{},subject=subjectids[0],student=selectedstudentnames[0][0])
+admin.test('/subject','Check if Approved',lambda x:x['subject'][0]['applied_to']['username']==selectedstudentnames[0][0])
+pro1.test('/approve',"Change Approvement",{},subject=subjectids[0],student=selectedstudentnames[0][1])
+stu2.test('/subject','Check if Approvement Changed',lambda x:x['subject'][0]['applied_to']['username']==selectedstudentnames[0][1])
 pro2.test('/approve',"Approve None",{},subject=subjectids[1],student=None)
 pro3.test('/subject','Check None Approvement',lambda x:x['subject'][1]['applied_to']==None)
 
@@ -173,17 +176,51 @@ admin.test('/phase','Advance to Phase 3',{'phase':3},password=passwordHash('admi
 stu1.test('/student','Check Student Selection Clearation',lambda x:reduce(lambda c,i:c+bool(i['selected']),x['student'],0)==0)
 stu2.test('/subject','Check Approvement Clearation',lambda x:reduce(lambda c,i:c+(i['selected_by']!=[]),x['subject'],0)==0)
 # Phase 3
+pro1.test('/approve',"Approve in phase 3",Error,subject=subjectids[0],student=selectedstudentnames[0][0])
 stu2.test('/select','Assigned Student Selecting',Error,subject=subjectids[2])
 stu3.test('/select','Select Assigned Subject',Error,subject=subjectids[0])
 stu3.test('/select','Select',{},subject=subjectids[2])
 
 admin.test('/phase','Advance to Phase 4',{'phase':4},password=passwordHash('admin','admin'))
-admin.test('/subject','Get Selected Students',getStudentNames)
+admin.test('/subject','Get Selected Students',getSelectedStudentNames)
 # Phase 4
 pro1.test('/approve','Approve Assigned Subject',Error,subject=subjectids[0],student=None)
-pro2.test('/approve','Approve',{},subject=subjectids[2],student=studentnames[2][0])
+pro2.test('/approve','Approve',{},subject=subjectids[2],student=selectedstudentnames[2][0])
 
 admin.test('/phase','Advance to Phase 5',{'phase':5},password=passwordHash('admin','admin'))
 # Phase 5
+stu1.test('/select','Select in Phase 5',Error,subject=subjectids[0])
+pro2.test('/approve','Approve in Phase 5',Error,subject=subjectids[2],student=selectedstudentnames[2][0])
+stu1.test('/student','Check Student Selection Clearation',lambda x:reduce(lambda c,i:c+bool(i['selected']),x['student'],0)==0)
+stu2.test('/subject','Check Approvement Clearation',lambda x:reduce(lambda c,i:c+(i['selected_by']!=[]),x['subject'],0)==0)
+
+admin.test('/match','Match Assigned Student',{},subject=subjectids[2],student=selectedstudentnames[2][0])
+stu2.test('/select','Assigned Student Selecting',Error,subject=subjectids[2])
+stu3.test('/select','Select Assigned Subject',Error,subject=subjectids[0])
+
+studentnames=[]
+def getAllStudentNames(x):
+    global studentnames
+    try:
+        studentnames=map(itemgetter('username'),i['student'])
+        return True
+    except Exception:
+        return False
+
+admin.test('/student','Get All Student Names',getAllStudentNames)
+
+admin.test('/match','Match',subject=subjectids[3],student=selectedstudentnames[4])
+
+admin.test('/phase','Advance to Phase 6',{'phase':6},password=passwordHash('admin','admin'))
+# Phase 6
+
+stu1.test('/subject','Show Subject',getSubjectIds)
+admin.test('/student','Show Student',getAllStudentNames)
+
+stu1.test('/select','Select in Phase 6',Error,subject=subjectids[0])
+pro2.test('/approve','Approve in Phase 6',Error,subject=subjectids[2],student=selectedstudentnames[2][0])
+admin.test('/match','Match in Phase 6',subject=subjectids[3],student=selectedstudentnames[4])
+
+admin.test('/phase','Advance to Phase 7',Error,password=passwordHash('admin','admin'))
 
 log('C13s! All of %d Tests Passed!\n'%testCount)
