@@ -7,6 +7,7 @@ import json_rpc
 from urllib2 import HTTPError
 from operator import itemgetter
 from sys import argv
+from pprint import pformat
 
 UrlPrefix='http://localhost:8080'
 
@@ -41,14 +42,16 @@ class Session(json_rpc.Json_RPC):
             method='POST' if file or postData else 'GET'
             ret=self.json_rpc(UrlPrefix+url,method,data=postData,file=file)
 
+            ret_p=pformat(ret)
+
             if criteria==Error:
-                return (ret.has_key('err'),str(ret))
+                return (ret.has_key('err'),ret_p)
             elif isinstance(criteria,dict):
-                return (ret==criteria,str(ret))
+                return (ret==criteria,ret_p)
             elif isinstance(criteria,StatusCode):
-                return (False,str(ret))
+                return (False,ret_p)
             else: # Callable
-                return (criteria(ret),str(ret))
+                return (criteria(ret),ret_p)
         except HTTPError,e:
             return (
                     isinstance(criteria,StatusCode) and criteria.code==e.code,
