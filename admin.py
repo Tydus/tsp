@@ -28,7 +28,7 @@ class hPhase(JsonRequestHandler):
         d=Settings.objects().first()
 
         if d.phase==6:
-            return self.write({'err':'Cannot Advance Beyond Phase 6'}
+            return self.write({'err':'Cannot Advance Beyond Phase 6'})
 
         if d.phase in [2,4]:
             clearSelection()
