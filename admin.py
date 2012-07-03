@@ -42,12 +42,13 @@ class hPhase(JsonRequestHandler):
 class hAnnounce(JsonRequestHandler):
     def get(self):
         d=Settings.objects().first()
-        self.write({'announce':d.get('announce')})
+        self.write({'announce':d.announce})
 
     @authenticated([Admin])
     def post(self):
         d=Settings.objects().first()
         d['announce']=self.get_argument('announce')
+        d.save()
         self.write({})
 
 @leafHandler(r'''/reset''')
