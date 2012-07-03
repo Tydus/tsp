@@ -26,6 +26,8 @@ class StatusCode:
     def __init__(self,code):
         self.code=code
 
+testCount=0
+
 class Session(json_rpc.Json_RPC):
     def test(self,url,description,criteria,file=None,**postData):
         log(description,'...')
@@ -33,9 +35,12 @@ class Session(json_rpc.Json_RPC):
         if not result:
             log('fail\n')
             log(v,'\n')
+            global testCount
+            log('Total of %d tests passed'%testCount)
             exit(-1)
         log('pass\n')
         verbose('    ',v,'\n')
+        testCount+=1
 
     def _Go(self,url,description,criteria,file=None,**postData):
         try:
@@ -181,3 +186,4 @@ pro2.test('/approve','Approve',{},subject=subjectids[2],student=studentnames[2][
 admin.test('/phase','Advance to Phase 5',{'phase':5},password=passwordHash('admin','admin'))
 # Phase 5
 
+log('C13s! All of %d Tests Passed!\n'%testCount)
