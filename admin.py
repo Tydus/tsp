@@ -9,9 +9,10 @@
 #                                                                              #
 ################################################################################
 
-from model import User,Admin,Settings,Professor,Student
+from model import User,Admin,Settings,Professor,Student,Subject
 from util import JsonRequestHandler,leafHandler,phase,resetDB,passwordHash,authenticated,sessions,clearSelection
 from tornado.web import HTTPError
+from bson import ObjectId
 
 @leafHandler(r'''/phase''')
 class hPhase(JsonRequestHandler):
@@ -108,9 +109,9 @@ class hMatch(JsonRequestHandler):
         if not s:
             return self.write({'err':'Subject not Exist'})
         if s.applied_to:
-            return self.write({'err':'The Subject is applied to '+s.applied_to.name})
+            return self.write({'err':'The Subject is applied to '+s.applied_to.realname})
 
-        u=Student.objects(id=ObjectId(student)).first()
+        u=Student.objects(username=student).first()
         if not u:
             return self.write({'err':'Student not Exist'})
         if u.applied_to:
