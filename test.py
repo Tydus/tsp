@@ -18,6 +18,8 @@ def verbose(*args):
     if Verbose:
         print "".join(args),
 
+Verbose=len(argv)==2 and argv[1]=='-v'
+
 class Error: pass
 ''' Predicted Error '''
 
@@ -29,6 +31,7 @@ class StatusCode:
 testCount=0
 
 class Session(json_rpc.Json_RPC):
+    ''' User Session '''
     def test(self,url,description,criteria,file=None,**postData):
         log(description,'...')
         result,v=self._Go(url,description,criteria,file,**postData)
@@ -63,18 +66,40 @@ class Session(json_rpc.Json_RPC):
                     "HTTPError %s"%e.code
                    )
 
-
-
-Verbose=len(argv)==2 and argv[1]=='-v'
-
 # Reset DB
 resetDB()
 
 # Test Script Starts Here
 
+subjectids=[]
+def getSubjectIds(x):
+    global subjectids
+    try:
+        subjectids=map(itemgetter('id'),x['subject'])
+        return True
+    except Exception:
+        return False
+
+studentnames=[]
+def getAllStudentNames(x):
+    global studentnames
+    try:
+        studentnames=map(itemgetter('username'),x['student'])
+        return True
+    except Exception:
+        return False
+
+selectedstudentnames=[]
+def getSelectedStudentNames(x):
+    global selectedstudentnames
+    try:
+        selectedstudentnames=[map(itemgetter('username'),i['selected_by']) for i in x['subject']]
+        return True
+    except Exception:
+        return False
+
 # Phase 0
 admin=Session()
-
 admin.test('/login','Admin Login',{"role":"Admin"},username='admin',password=passwordHash('admin','admin'))
 admin.test('/profile','Admin profile',lambda r:r['role']=='Admin')
 admin.test('/chpasswd','Admin Change Password',{},password=passwordHash('admin','admin'),new_password=passwordHash('admin','test'))
@@ -98,7 +123,6 @@ pro1.test('/login','Professor Login with new Pw',{"role":"Professor"},username='
 pro1.test('/add','Professor Add Subject',{},name='s1',desc='This is subject1\nNewline\n',type1='1',type2='1',source='1')
 pro1.test('/add','Professor Add Subject',{},name='中文测试',desc='This is subject2\nNewline\n',type1='2',type2='2',source='1')
 
-
 pro2=Session()
 pro2.test('/login','Professor Login',{"role":"Professor"},username='1901801002',password=passwordHash('1901801002','1901801002'))
 pro2.test('/add','Professor Add Subject',{},name='s21',desc='This is subject21\nNewline\n',type1='1',type2='1',source='2')
@@ -111,20 +135,10 @@ pro3.test('/add','Professor Add Subject',{},name='s32',desc='This is subject32\n
 
 stu1=Session()
 stu1.test('/login','Student Login',{"role":"Student"},username='09212001',password=passwordHash('09212001','09212001'))
-
-subjectids=[]
-def getSubjectIds(x):
-    global subjectids
-    try:
-        subjectids=map(itemgetter('id'),x['subject'])
-        return True
-    except Exception:
-        return False
-
 pro1.test('/phase','Show Phase',{'phase':0})
 stu1.test('/phase','Show Phase',{'phase':0})
 
-stu1.test('/student','Show Student',lambda x:x.get('student') and x['student'][0].get('username'))
+stu1.test('/student','Show Student',getAllStudentNames)
 stu1.test('/subject','Show Subject',getSubjectIds)
 pro2.test('/subject','Show Subject',getSubjectIds)
 admin.test('/subject','Show Subject',getSubjectIds)
@@ -145,19 +159,10 @@ stu3=Session()
 stu3.test('/login','Student Login',{"role":"Student"},username='09212003',password=passwordHash('09212003','09212003'))
 stu3.test('/select','Select',{},subject=subjectids[1])
 stu1.test('/student','Check Student Selection',lambda x:reduce(lambda c,i:c+bool(i['selected']),x['student'],0)==3)
-
-selectedstudentnames=[]
-def getSelectedStudentNames(x):
-    global selectedstudentnames
-    try:
-        selectedstudentnames=[map(itemgetter('username'),i['selected_by']) for i in x['subject']]
-        return True
-    except Exception:
-        return False
-
 admin.test('/subject','Show Subject',getSelectedStudentNames)
 
 admin.test('/phase','Advance to Phase 2',{'phase':2},password=passwordHash('admin','admin'))
+
 # Phase 2
 stu1.test('/select','Select in phase 2',Error,subject=subjectids[0])
 pro2.test('/approve',"Approve other Professor's Subject",Error,subject=subjectids[0],student=selectedstudentnames[0][0])
@@ -175,6 +180,7 @@ stu1.test('/student','Check Student Selection',lambda x:reduce(lambda c,i:c+bool
 admin.test('/phase','Advance to Phase 3',{'phase':3},password=passwordHash('admin','admin'))
 stu1.test('/student','Check Student Selection Clearation',lambda x:reduce(lambda c,i:c+bool(i['selected']),x['student'],0)==0)
 stu2.test('/subject','Check Approvement Clearation',lambda x:reduce(lambda c,i:c+(i['selected_by']!=[]),x['subject'],0)==0)
+
 # Phase 3
 pro1.test('/approve',"Approve in phase 3",Error,subject=subjectids[0],student=selectedstudentnames[0][0])
 stu2.test('/select','Assigned Student Selecting',Error,subject=subjectids[2])
@@ -183,44 +189,32 @@ stu3.test('/select','Select',{},subject=subjectids[2])
 
 admin.test('/phase','Advance to Phase 4',{'phase':4},password=passwordHash('admin','admin'))
 admin.test('/subject','Get Selected Students',getSelectedStudentNames)
+
 # Phase 4
 pro1.test('/approve','Approve Assigned Subject',Error,subject=subjectids[0],student=None)
 pro2.test('/approve','Approve',{},subject=subjectids[2],student=selectedstudentnames[2][0])
 
 admin.test('/phase','Advance to Phase 5',{'phase':5},password=passwordHash('admin','admin'))
+stu1.test('/student','Check Student Selection Clearation',lambda x:reduce(lambda c,i:c+bool(i['selected']),x['student'],0)==0)
+stu2.test('/subject','Check Approvement Clearation',lambda x:reduce(lambda c,i:c+(i['selected_by']!=[]),x['subject'],0)==0)
+
 # Phase 5
 stu1.test('/select','Select in Phase 5',Error,subject=subjectids[0])
 pro2.test('/approve','Approve in Phase 5',Error,subject=subjectids[2],student=selectedstudentnames[2][0])
-stu1.test('/student','Check Student Selection Clearation',lambda x:reduce(lambda c,i:c+bool(i['selected']),x['student'],0)==0)
-stu2.test('/subject','Check Approvement Clearation',lambda x:reduce(lambda c,i:c+(i['selected_by']!=[]),x['subject'],0)==0)
 
 stu2.test('/select','Assigned Student Selecting',Error,subject=subjectids[2])
 stu3.test('/select','Select Assigned Subject',Error,subject=subjectids[0])
 admin.test('/match','Match Assigned Student',Error,subject=subjectids[2],student=selectedstudentnames[2][0])
-
-studentnames=[]
-def getAllStudentNames(x):
-    global studentnames
-    try:
-        studentnames=map(itemgetter('username'),x['student'])
-        return True
-    except Exception:
-        return False
-
-admin.test('/student','Get All Student Names',getAllStudentNames)
-
 admin.test('/match','Match',{},subject=subjectids[3],student=studentnames[4])
 
 admin.test('/phase','Advance to Phase 6',{'phase':6},password=passwordHash('admin','admin'))
-# Phase 6
-
 stu1.test('/subject','Show Subject',getSubjectIds)
 admin.test('/student','Show Student',getAllStudentNames)
 
+# Phase 6
 stu1.test('/select','Select in Phase 6',Error,subject=subjectids[0])
 pro2.test('/approve','Approve in Phase 6',Error,subject=subjectids[2],student=selectedstudentnames[2][0])
 admin.test('/match','Match in Phase 6',Error,subject=subjectids[3],student=studentnames[4])
-
 admin.test('/phase','Advance to Phase 7',Error,password=passwordHash('admin','admin'))
 
-log('C13s! All of %d Tests Passed!\n'%testCount)
+log('\n\nC13s! All of %d Tests Passed!\n'%testCount)
