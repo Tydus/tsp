@@ -124,7 +124,7 @@ admin.test('/subject','Show Subject',getSubjectIds)
 stu1.test('/select','Select in phase 0',Error,subject=subjectids[0])
 
 admin.test('/phase','Advance to Phase 1 with no PW',StatusCode(400),foo='bar')
-admin.test('/phase','Advance to Phase 1',{'phase':1},foo='bar',password=passwordHash('admin','admin'))
+admin.test('/phase','Advance to Phase 1',{'phase':1},password=passwordHash('admin','admin'))
 
 # Phase 1
 stu1.test('/select','Select',{},subject=subjectids[0])
@@ -149,7 +149,7 @@ def getStudentNames(x):
 
 admin.test('/subject','Show Subject',getStudentNames)
 
-admin.test('/phase','Advance to Phase 2',{'phase':2},foo='bar',password=passwordHash('admin','admin'))
+admin.test('/phase','Advance to Phase 2',{'phase':2},password=passwordHash('admin','admin'))
 # Phase 2
 stu1.test('/select','Select in phase 2',Error,subject=subjectids[0])
 pro2.test('/approve',"Approve other Professor's Subject",Error,subject=subjectids[0],student=studentnames[0][0])
@@ -164,7 +164,7 @@ pro3.test('/subject','Check Selection',lambda x:x['subject'][0]['selected_by'] a
 stu1.test('/student',"Check Student's Approvement",lambda x:reduce(lambda c,i:c+bool(i['applied_to']),x['student'],0)==1)
 stu1.test('/student','Check Student Selection',lambda x:reduce(lambda c,i:c+bool(i['selected']),x['student'],0)==3)
 
-admin.test('/phase','Advance to Phase 3',{'phase':3},foo='bar',password=passwordHash('admin','admin'))
+admin.test('/phase','Advance to Phase 3',{'phase':3},password=passwordHash('admin','admin'))
 stu1.test('/student','Check Student Selection Clearation',lambda x:reduce(lambda c,i:c+bool(i['selected']),x['student'],0)==0)
 stu2.test('/subject','Check Approvement Clearation',lambda x:reduce(lambda c,i:c+(i['selected_by']!=[]),x['subject'],0)==0)
 # Phase 3
