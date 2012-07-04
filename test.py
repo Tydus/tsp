@@ -147,6 +147,9 @@ stu1.test('/subject','Show Subject',getSubjectIds)
 pro2.test('/subject','Show Subject',getSubjectIds)
 admin.test('/subject','Show Subject',getSubjectIds)
 
+pro2.test('/modify','Professor Modify Subject',{},id=subjectids[2],name='s21-modified',desc='This is subject21\nModified\n')
+admin.test('/subject','Check Subject Modification',lambda x:x['subject'][2]['name']=='s21-modified')
+
 stu1.test('/select','Select in phase 0',Error,subject=subjectids[0])
 
 admin.test('/phase','Advance to Phase 1 with no PW',StatusCode(400),foo='bar')
