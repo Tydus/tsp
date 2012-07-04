@@ -47,7 +47,7 @@ x   Change PW                   P   /chpasswd   password=<>&new_password=<>     
 
 Admin
 x   Import                      P   /import     professor=xxx.csv&student=xxx.csv            {}
-x   Phase                       GP  /phase      foo=bar                                      {phase:N}
+x   Phase                       GP  /phase      password=<>                                  {phase:N}
 x   Reset DB                    P   /reset      password=<>                                  {}
 x   Assign Student to Subject   P   /assign     subject=<SubjectID>&student=<StudentID>      {??}
 
