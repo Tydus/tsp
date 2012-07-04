@@ -174,7 +174,7 @@ pro1.test('/approve',"Approve",{},subject=subjectids[0],student=selectedstudentn
 admin.test('/subject','Check if Approved',lambda x:x['subject'][0]['applied_to']['username']==selectedstudentnames[0][0])
 pro1.test('/approve',"Change Approvement",{},subject=subjectids[0],student=selectedstudentnames[0][1])
 stu2.test('/subject','Check if Approvement Changed',lambda x:x['subject'][0]['applied_to']['username']==selectedstudentnames[0][1])
-pro2.test('/approve',"Approve None",{},subject=subjectids[1],student=None)
+pro2.test('/approve',"Approve None",{},subject=subjectids[1])
 pro3.test('/subject','Check None Approvement',lambda x:x['subject'][1]['applied_to']==None)
 
 pro3.test('/subject','Check Selection',lambda x:x['subject'][0]['selected_by'] and x['subject'][1]['selected_by'])
