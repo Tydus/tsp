@@ -39,6 +39,28 @@ class hAdd(JsonRequestHandler):
 
         return self.write({})
 
+@leafHandler(r'''/modify''')
+class hModify(JsonRequestHandler):
+    @authenticated([Professor],[0])
+    def post(self):
+        u=self.current_user
+
+        subject=self.get_argument('id')
+        name=self.get_argument('name',default="")
+        desc=self.get_argument('desc',default="")
+        type1=self.get_argument('type1',default="")
+        type2=self.get_argument('type2',default="")
+        source=self.get_argument('source',default="")
+
+        s=Subject.objects(id=ObjectId(subject)).first()
+        for i in ['name','desc','type1','type2','source']:
+            value=self.get_argument(i,default="")
+            if value:
+                s[i]=value
+        s.save()
+
+        return self.write({})
+
 @leafHandler(r'''/approve''')
 class hApprove(JsonRequestHandler):
     @authenticated([Professor],[2,4])
