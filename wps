@@ -2,6 +2,7 @@
 Common
 t   Login                       P   /login      username=<>&password=<>                      {role:Admin|Student|Professor}
 t   Logout                      P   /logout     foo=bar                                      {}
+t   Announce                    G   /announce                                                {announce}
 t   Profile                     G   /profile        {
                                                         username,
                                                         realname,
@@ -45,17 +46,17 @@ t   Show Subject                G   /subject        {subject:[{
         (Filter)
 t   Change PW                   P   /chpasswd   password=<>&new_password=<>                  {}
 
-Admin
 t   Import                      P   /import     professor=xxx.csv&student=xxx.csv            {}
-t   Phase                       GP  /phase      foo=bar                                      {phase:N}
+t   Phase                       GP  /phase      password=<>                                  {phase:N}
+t   Announce                    P   /announce   announce=<>                                  {}
 t   Reset DB                    P   /reset      password=<>                                  {}
-x   Assign Student to Subject   P   /assign     subject=<SubjectID>&student=<StudentID>      {??}
+t   Assign Student to Subject   P   /assign     subject=<SubjectID>&student=<StudentID>      {??}
 
 
 Professor
 t   Add Subject                 P   /add        name=<>&desc=<>&type1=<>&type2=<>&source=<>  {}
     Mod Subject                 P   /modify     id=<>&name=<>&...                            {}
-x   Approve Student in Subject  P   /approve    subject=<SubjectID>&student=<StudentID>      {}
+t   Approve Student in Subject  P   /approve    subject=<SubjectID>&student=<StudentID>      {}
 
 Student
 t   Select Subject              P   /select     subject=<SubjectId>                          {}
