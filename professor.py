@@ -45,7 +45,7 @@ class hApprove(JsonRequestHandler):
     def post(self):
 
         subject=self.get_argument('subject')
-        student=self.get_argument('student')
+        student=self.get_argument('student',default="")
 
         s=Subject.objects(id=ObjectId(subject)).first()
         if not s:
@@ -64,13 +64,14 @@ class hApprove(JsonRequestHandler):
             u.save()
             s.applied_to=None
 
-        for u_embedded in s.selected_by:
-            u=Student.objects(username=u_embedded.username).first()
-            if u.username==student:
-                # You are the one!
-                s.applied_to=u
-                u.applied_to=s
-            u.save()
+        if student:
+            for u_embedded in s.selected_by:
+                u=Student.objects(username=u_embedded.username).first()
+                if u.username==student:
+                    # You are the one!
+                    s.applied_to=u
+                    u.applied_to=s
+                u.save()
 
         s.save()
 
