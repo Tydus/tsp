@@ -2,6 +2,7 @@
 Common
 x   Login                       P   /login      username=<>&password=<>                      {role:Admin|Student|Professor}
 x   Logout                      P   /logout     foo=bar                                      {}
+x   Announce                    G   /announce                                                {announce}
 x   Profile                     G   /profile        {
                                                         username,
                                                         realname,
@@ -48,6 +49,7 @@ x   Change PW                   P   /chpasswd   password=<>&new_password=<>     
 Admin
 x   Import                      P   /import     professor=xxx.csv&student=xxx.csv            {}
 x   Phase                       GP  /phase      password=<>                                  {phase:N}
+x   Announce                    P   /announce   announce=<>                                  {}
 x   Reset DB                    P   /reset      password=<>                                  {}
 x   Assign Student to Subject   P   /assign     subject=<SubjectID>&student=<StudentID>      {??}
 
