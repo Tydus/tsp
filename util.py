@@ -23,13 +23,13 @@ TTL=15*60 # 15min
 class SessionStorage():
 
     def __init__(self):
-        self.__dict__['__sessions']={}
+        self.clear()
 
     def __getitem__(self,key):
         if key==None:
             return None
 
-        ss=self.__dict__['__sessions']
+        ss=self.__sessions
         # Get User by Session, and update TTL
         if ss.has_key(key):
             if ss[key]['ttl']>=time():
@@ -44,17 +44,15 @@ class SessionStorage():
     def createSession(self,user):
         # Create a new Session
         s=sha1(str(ObjectId())).hexdigest()
-        ss=self.__dict__['__sessions']
-        ss[s]={'user':user,'ttl':time()+TTL}
+        self.__sessions[s]={'user':user,'ttl':time()+TTL}
         return s
 
     def deleteSession(self,session):
-        ss=self.__dict__['__sessions']
-        if ss.has_key(session):
-            del ss[session]
+        if self.__sessions.has_key(session):
+            del self.__sessions[session]
 
     def clear(self):
-        self.__dict__['__sessions']={}
+        self.__sessions={}
 
 sessions=SessionStorage()
 
