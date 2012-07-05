@@ -94,7 +94,7 @@ def main():
             (r'/(.*\..*)',StaticFileHandler,{'path':static_path}),
             (r'/',RedirectHandler,{'url':'/login.html'}),
             ]+leafHandlers
-    server=HTTPServer(Application(leafHandlers,cookie_secret='(HY$WGIH(&$#*)I*5yhr)*HG)Oh59878ehT%08'))
+    server=HTTPServer(Application(leafHandlers,cookie_secret='(HY$WGIH(&$#*)I*5yhr)*HG)Oh59878ehT%08'),xheaders=True)
     try:
         server.listen(args.listen)
     except SocketError:
