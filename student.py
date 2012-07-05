@@ -20,35 +20,48 @@ from operator import itemgetter
 class hSelect(JsonRequestHandler):
     @authenticated([Student],[1,3])
     def post(self):
-        subject=self.get_argument('subject')
+        subject=self.get_argument('subject',"")
 
         u=self.current_user
         if u.excluded:
             return self.write({'err':'你被从选课中排除'})
         if u.applied_to:
-            return self.write({'err':'你已被'+u.applied_to.name+'课题选中'})
+            #return self.write({'err':'你已被'+u.applied_to.name+'课题选中'})
+            return self.write({'err':'你已被课题选中'})
 
-        s=Subject.objects(id=ObjectId(subject)).first()
-        if not s:
-            return self.write({'err':'课题不存在'})
-        if s.applied_to:
-            return self.write({'err':'课题已被'+s.applied_to.realname+'选中'})
+        if not subject:
+            # Clear Currently Selected
+            if u.selected:
+                old_s=u.selected
+                #u.selected=None
+                old_s.selected_by=[i for i in old_s.selected_by if i.id!=u.id]
+                old_s.save()
+                u.save()
 
-        # Clear Currently Selected
-        if u.selected:
-            old_s=u.selected
-            #u.selected=None
-            old_s.selected_by=[i for i in old_s.selected_by if i.id!=u.id]
-            old_s.save()
+	else:
+            s=Subject.objects(id=ObjectId(subject)).first()
+            if not s:
+                return self.write({'err':'课题不存在'})
+            if s.applied_to:
+                #return self.write({'err':'课题已被'+s.applied_to.realname+'选中'})
+                return self.write({'err':'课题已被选中'})
 
-        # Beware if old_s==s
-        s.reload()
+            # Clear Currently Selected
+            if u.selected:
+                old_s=u.selected
+                #u.selected=None
+                old_s.selected_by=[i for i in old_s.selected_by if i.id!=u.id]
+                old_s.save()
 
-        # Select New
-        u.selected=s
-        s.selected_by.append(u)
+            # Beware if old_s==s
+            s.reload()
 
-        s.save()
+            # Select New
+            if subject:
+                u.selected=s
+                s.selected_by.append(u)
+            s.save()
+
         u.save()
 
         self.write({})

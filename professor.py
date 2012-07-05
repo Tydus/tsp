@@ -28,16 +28,17 @@ class hAdd(JsonRequestHandler):
         type2=self.get_argument('type2')
         source=self.get_argument('source')
 
-        Subject(
+        s=Subject(
                 name=name,
                 desc=desc,
                 type1=type1,
                 type2=type2,
                 source=source,
                 professor=u,
-        ).save()
+        )
+        s.save()
 
-        return self.write({})
+        return self.write({'id':str(s.id)})
 
 @leafHandler(r'''/modify''')
 class hModify(JsonRequestHandler):
