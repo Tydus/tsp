@@ -46,11 +46,12 @@ t   Show Subject                G   /subject        {subject:[{
         (Filter)
 t   Change PW                   P   /chpasswd   password=<>&new_password=<>                  {}
 
+Admin
 t   Import                      P   /import     professor=xxx.csv&student=xxx.csv            {}
 t   Phase                       GP  /phase      password=<>                                  {phase:N}
 t   Announce                    P   /announce   announce=<>                                  {}
 t   Reset DB                    P   /reset      password=<>                                  {}
-t   Assign Student to Subject   P   /assign     subject=<SubjectID>&student=<StudentID>      {??}
+t   Match Student to Subject    P   /match      subject=<SubjectID>&student=<StudentID>      {}
 
 
 Professor
