@@ -71,13 +71,13 @@ class hApprove(JsonRequestHandler):
 
         s=Subject.objects(id=ObjectId(subject)).first()
         if not s:
-            return self.write({'err':'Subject not Exist'})
+            return self.write({'err':'课题不存在'})
 
         if s.professor.username!=self.current_user.username:
-            return self.write({'err':'Not your Subject'})
+            return self.write({'err':'不是你的课题'})
 
         if s.selected_by==[]:
-            return self.write({'err':'Cannot Change Subject Approved in Previous Phase'})
+            return self.write({'err':'不可改选上阶段选好的课题'})
 
         # Clear previous approvement
         if s.applied_to:
