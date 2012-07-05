@@ -51,7 +51,7 @@ x   Import                      P   /import     professor=xxx.csv&student=xxx.cs
 x   Phase                       GP  /phase      password=<>                                  {phase:N}
 x   Announce                    P   /announce   announce=<>                                  {}
 x   Reset DB                    P   /reset      password=<>                                  {}
-x   Assign Student to Subject   P   /assign     subject=<SubjectID>&student=<StudentID>      {??}
+x   Match Student to Subject    P   /match      subject=<SubjectID>&student=<StudentID>      {}
 
 
 Professor
