@@ -29,7 +29,7 @@ class hPhase(JsonRequestHandler):
         d=Settings.objects().first()
 
         if d.phase==6:
-            return self.write({'err':'Cannot Advance Beyond Phase 6'})
+            return self.write({'err':'不能超过阶段6'})
 
         if d.phase in [2,4]:
             clearSelection()
@@ -119,15 +119,15 @@ class hMatch(JsonRequestHandler):
 
         s=Subject.objects(id=ObjectId(subject)).first()
         if not s:
-            return self.write({'err':'Subject not Exist'})
+            return self.write({'err':'课题不存在'})
         if s.applied_to:
-            return self.write({'err':'The Subject is applied to '+s.applied_to.realname})
+            return self.write({'err':'课题已被分配给'+s.applied_to.realname})
 
         u=Student.objects(username=student).first()
         if not u:
-            return self.write({'err':'Student not Exist'})
+            return self.write({'err':'学生不存在'})
         if u.applied_to:
-            return self.write({'err':'the Student is approved by '+u.applied_to.name})
+            return self.write({'err':'学生已被分配'+u.applied_to.name+'课题'})
 
         # Match Straightly
         s.selected_by=[]

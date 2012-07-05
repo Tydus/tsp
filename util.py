@@ -126,7 +126,7 @@ def authenticated(roles=[Student,Professor,Admin],phases=range(7)):
                 raise HTTPError(403)
 
             if phase not in phases:
-                return self.write({'err':'not your turn'})
+                return self.write({'err':'该阶段无法进行此操作'})
 
             if self.current_user.__class__ not in roles:
                 return HTTPError(403)

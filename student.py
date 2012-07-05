@@ -24,15 +24,15 @@ class hSelect(JsonRequestHandler):
 
         u=self.current_user
         if u.excluded:
-            return self.write({'err':'You are excluded from selecting'})
+            return self.write({'err':'你被从选课中排除'})
         if u.applied_to:
-            return self.write({'err':'You are approved by '+u.applied_to.name})
+            return self.write({'err':'你已被'+u.applied_to.name+'课题选中'})
 
         s=Subject.objects(id=ObjectId(subject)).first()
         if not s:
-            return self.write({'err':'Subject not Exist'})
+            return self.write({'err':'课题不存在'})
         if s.applied_to:
-            return self.write({'err':'The Subject is applied to '+s.applied_to.realname})
+            return self.write({'err':'课题已被'+s.applied_to.realname+'选中'})
 
         # Clear Currently Selected
         if u.selected:

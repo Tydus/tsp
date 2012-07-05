@@ -18,9 +18,9 @@ class hLogin(JsonRequestHandler):
     def post(self):
         u=User.objects(username=self.get_argument('username')).first()
         if not u:
-            return self.write({'err':'No such user'})
+            return self.write({'err':'用户不存在'})
         if u.password!=self.get_argument('password'):
-            return self.write({'err':'Password mismatch'})
+            return self.write({'err':'密码错误'})
 
         sid=sessions.createSession(u)
         self.set_cookie('sid',sid)
@@ -44,9 +44,9 @@ class hChPasswd(JsonRequestHandler):
         u=self.current_user
 
         if pw!=u.password:
-            return self.write({'err':'Old password mismatch'})
+            return self.write({'err':'旧密码错误'})
         if not newpw:
-            return self.write({'err':'No new password'})
+            return self.write({'err':'没有新密码'})
 
         u.password=newpw
         u.save()
