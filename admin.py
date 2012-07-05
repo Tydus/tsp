@@ -22,14 +22,14 @@ class hPhase(JsonRequestHandler):
 
     @authenticated([Admin])
     def post(self):
-        password=self.get_argument('password')
+        password=self.get_argument('password',"")
         if password!=self.current_user.password:
-            raise HTTPError(403)
+            return self.write({'err':'密码错误'})
 
         d=Settings.objects().first()
 
         if d.phase==6:
-            return self.write({'err':'不能超过阶段6'})
+            return self.write({'err':'不能再推进阶段'})
 
         if d.phase in [2,4]:
             clearSelection()
@@ -57,7 +57,7 @@ class hReset(JsonRequestHandler):
     def post(self):
         password=self.get_argument('password')
         if password!=self.current_user.password:
-            raise HTTPError(403)
+            return self.write({'err':'密码错误'})
         resetDB()
         sessions.clear()
 
