@@ -110,6 +110,7 @@ admin.test('/logout','Admin Logout',{},foo='bar')
 admin.test('/profile','Admin Profile without Login',StatusCode(403))
 admin.test('/announce','Show Announce',{'announce':'Test<br>Wrap'})
 admin.test('/login','Admin Login with new Pw',{"role":"Admin"},username='admin',password=passwordHash('admin','test'))
+admin.test('/reset','Reset DB without Pw',Error,foo='bar')
 admin.test('/reset','Reset DB',{},password=passwordHash('admin','test'))
 
 admin.test('/profile','Admin Profile after Reset DB',StatusCode(403))
@@ -152,7 +153,7 @@ admin.test('/subject','Check Subject Modification',lambda x:x['subject'][2]['nam
 
 stu1.test('/select','Select in phase 0',Error,subject=subjectids[0])
 
-admin.test('/phase','Advance to Phase 1 with no PW',StatusCode(400),foo='bar')
+admin.test('/phase','Advance to Phase 1 with no PW',Error,foo='bar')
 admin.test('/phase','Advance to Phase 1',{'phase':1},password=passwordHash('admin','admin'))
 
 # Phase 1
