@@ -72,7 +72,7 @@ class hImport(JsonRequestHandler):
 
         for t,v in self.request.files.items():
             b=v[0]['body']
-            b=b.decode('gbk')
+            b=b.decode('gb18030').encode('utf-8')
             r=reader(StringIO(b))
 
             # Strip first 2 lines
