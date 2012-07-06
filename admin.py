@@ -55,7 +55,7 @@ class hAnnounce(JsonRequestHandler):
 class hReset(JsonRequestHandler):
     @authenticated([Admin])
     def post(self):
-        password=self.get_argument('password')
+        password=self.get_argument('password',"")
         if password!=self.current_user.password:
             return self.write({'err':'密码错误'})
         resetDB()
