@@ -26,8 +26,7 @@ class hSelect(JsonRequestHandler):
         if u.excluded:
             return self.write({'err':'你被从选课中排除'})
         if u.applied_to:
-            #return self.write({'err':'你已被'+u.applied_to.name+'课题选中'})
-            return self.write({'err':'你已被课题选中'})
+            return self.write({'err':'你已被'+u.applied_to.name.encode('utf-8')+'课题选中'})
 
         if not subject:
             # Clear Currently Selected
@@ -43,8 +42,7 @@ class hSelect(JsonRequestHandler):
             if not s:
                 return self.write({'err':'课题不存在'})
             if s.applied_to:
-                #return self.write({'err':'课题已被'+s.applied_to.realname+'选中'})
-                return self.write({'err':'课题已被选中'})
+                return self.write({'err':'课题已被'+s.applied_to.realname.encode('utf-8')+'选中'})
 
             # Clear Currently Selected
             if u.selected:

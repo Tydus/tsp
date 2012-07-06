@@ -55,7 +55,7 @@ class hAnnounce(JsonRequestHandler):
 class hReset(JsonRequestHandler):
     @authenticated([Admin])
     def post(self):
-        password=self.get_argument('password')
+        password=self.get_argument('password',"")
         if password!=self.current_user.password:
             return self.write({'err':'密码错误'})
         resetDB()
@@ -121,13 +121,13 @@ class hMatch(JsonRequestHandler):
         if not s:
             return self.write({'err':'课题不存在'})
         if s.applied_to:
-            return self.write({'err':'课题已被分配给'+s.applied_to.realname})
+            return self.write({'err':'课题已被分配给'+s.applied_to.realname.encode('utf-8')})
 
         u=Student.objects(username=student).first()
         if not u:
             return self.write({'err':'学生不存在'})
         if u.applied_to:
-            return self.write({'err':'学生已被分配'+u.applied_to.name+'课题'})
+            return self.write({'err':'学生已被分配'+u.applied_to.name.encode('utf-8')+'课题'})
 
         # Match Straightly
         s.selected_by=[]
