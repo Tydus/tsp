@@ -33,12 +33,12 @@ testCount=0
 class Session(json_rpc.Json_RPC):
     ''' User Session '''
     def test(self,url,description,criteria,file=None,**postData):
-        log(description,'...')
+        global testCount
+        log("%3d: "%(testCount+1),description,'...')
         result,v=self._Go(url,description,criteria,file,**postData)
         if not result:
             log('fail\n')
             log(v,'\n')
-            global testCount
             log('Total of %d tests passed'%testCount)
             exit(-1)
         log('pass\n')
