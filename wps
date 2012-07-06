@@ -55,8 +55,8 @@ t   Match Student to Subject    P   /match      subject=<SubjectID>&student=<Stu
 
 
 Professor
-x   Add Subject                 P   /add        name=<>&desc=<>&type1=<>&type2=<>&source=<>  {id}
-x   Mod Subject                 P   /modify     id=<>&name=<>&...                            {}
+t   Add Subject                 P   /add        name=<>&desc=<>&type1=<>&type2=<>&source=<>  {id}
+t   Mod Subject                 P   /modify     id=<>&name=<>&...                            {}
 t   Approve Student in Subject  P   /approve    subject=<SubjectID>&student=<StudentID>      {}
 
 Student
