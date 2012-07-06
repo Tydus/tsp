@@ -72,6 +72,10 @@ class hImport(JsonRequestHandler):
 
         for t,v in self.request.files.items():
             b=v[0]['body']
+            try:
+                b=b.decode('gbk')
+            except:
+                b=b.decode('utf-8')
             r=reader(StringIO(b))
 
             # Strip first 2 lines
@@ -81,29 +85,29 @@ class hImport(JsonRequestHandler):
             # Import Data to DB
             if t=='student':
                 for i in r:
-                    d=dict(zip([
-                        'foo',
-                        'username',
-                        'realname',
-                        'cls',
-                        'cls_index',
-                        'department',
-                        ], i))
-                    del d['foo']
-                    d['password']=passwordHash(d['username'],d['username'])
+                    d={
+                        'username':i[1],
+                        'password':passwordHash(i[1],i[1]),
+                        'realname':i[2],
+                        'cls':i[3],
+                        'cls_index':i[4],
+                        'department':i[5],
+                       }
+                    try:
+                        d['excluded']=bool(i[6])
+                    except:
+                        pass
                     Student(**d).save()
             elif t=='professor':
                 for i in r:
-                    d=dict(zip([
-                        'foo',
-                        'username',
-                        'realname',
-                        'title',
-                        'direction',
-                        'department',
-                        ], i))
-                    del d['foo']
-                    d['password']=passwordHash(d['username'],d['username'])
+                    d={
+                        'username':i[1],
+                        'password':passwordHash(i[1],i[1]),
+                        'realname':i[2],
+                        'title':i[3],
+                        'direction':i[4],
+                        'department':i[5],
+                    }
                     Professor(**d).save()
             else:
                 raise HTTPError(400)
