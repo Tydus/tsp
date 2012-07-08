@@ -61,4 +61,5 @@ t   Approve Student in Subject  P   /approve    subject=<SubjectID>&student=<Stu
 
 Student
 t   Select Subject              P   /select     subject=<SubjectId>                          {}
-
+t   Upload Resume               P   /resume     resume=xxx.xxx                               {}
+t   Download Resume             G   /resume     student=<StudentID>                          (Raw File)
