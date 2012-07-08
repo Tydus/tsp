@@ -77,8 +77,9 @@ class hResume(JsonRequestHandler):
         if not u.resume:
             return self.write({'err':'学生没有简历'})
 
-        # FIXME: an ugly hack here by using content_type for filename due to a MongoEngine bug
-        self.set_header('Content-disposition','attachment;filename='+u.resume.content_type)
+        # FIXME: an ugly hack here due to a MongoEngine bug
+        #        must use `name' for filename while write using `filename'
+        self.set_header('Content-disposition','attachment;filename='+u.resume.name)
         self.write(u.resume.read())
 
     @authenticated([Student],[0,1])
@@ -90,11 +91,10 @@ class hResume(JsonRequestHandler):
             raise HTTPError(400)
         r=r[0]
 
-        # FIXME: an ugly hack here by using content_type for filename due to a MongoEngine bug
         if u.resume:
-            u.resume.replace(StringIO(r['body']),content_type=r['filename'])
+            u.resume.replace(StringIO(r['body']),filename=r['filename'])
         else:
-            u.resume.put(StringIO(r['body']),content_type=r['filename'])
+            u.resume.put(StringIO(r['body']),filename=r['filename'])
 
         u.save()
 
