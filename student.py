@@ -16,6 +16,7 @@ from bson import ObjectId
 from json import dumps
 from operator import itemgetter
 from StringIO import StringIO
+from urllib import quote
 
 @leafHandler(r'''/select''')
 class hSelect(JsonRequestHandler):
@@ -77,9 +78,22 @@ class hResume(JsonRequestHandler):
         if not u.resume:
             return self.write({'err':'学生没有简历'})
 
+        # Guess browser and write Content-Disposition
+
         # FIXME: an ugly hack here due to a MongoEngine bug
-        #        must use `name' for filename while write using `filename'
-        self.set_header('Content-disposition','attachment;filename='+u.resume.name)
+        #        must use `u.resume.name' for filename while write using `filename'
+
+        # FIXME: filename will break on android with its internal browser
+        e=quote(u.resume.name.encode('utf-8')).replace('+','%20')
+        ua=self.request.headers['User-Agent'].lower()
+        if "msie" in ua:
+            cd='filename="%s"'%e
+        elif "firefox" in ua:
+            cd="filename*=UTF-8''%s"%e
+        else:
+            cd='filename="%s"'%u.resume.name
+        self.set_header('Content-Disposition','attachment;'+cd)
+        self.set_header('Content-Type','application/octet-stream')
         self.write(u.resume.read())
 
     @authenticated([Student],[0,1])
