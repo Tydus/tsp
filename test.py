@@ -32,10 +32,10 @@ testCount=0
 
 class Session(json_rpc.Json_RPC):
     ''' User Session '''
-    def test(self,url,description,criteria,file=None,**postData):
+    def test(self,url,description,criteria,file=None,no_json=False,**postData):
         global testCount
         log("%3d: "%(testCount+1),description,'...')
-        result,v=self._Go(url,description,criteria,file,**postData)
+        result,v=self._Go(url,description,criteria,file,no_json,**postData)
         if not result:
             log('fail\n')
             log(v,'\n')
@@ -45,10 +45,13 @@ class Session(json_rpc.Json_RPC):
         verbose('    ',v,'\n')
         testCount+=1
 
-    def _Go(self,url,description,criteria,file=None,**postData):
+    def _Go(self,url,description,criteria,file=None,no_json=False,**postData):
         try:
             method='POST' if file or postData else 'GET'
-            ret=self.json_rpc(UrlPrefix+url,method,data=postData,file=file)
+            if no_json:
+                ret=self.http_rpc(UrlPrefix+url,method,data=postData,file=file)
+            else:
+                ret=self.json_rpc(UrlPrefix+url,method,data=postData,file=file)
 
             ret_p=pformat(ret)
 
@@ -151,12 +154,17 @@ admin.test('/subject','Show Subject',getSubjectIds)
 pro2.test('/modify','Professor Modify Subject',{},id=subjectids[2],name='s21-modified',desc='This is subject21\nModified\n')
 admin.test('/subject','Check Subject Modification',lambda x:x['subject'][2]['name']=='s21-modified')
 
+pro2.test('/resume?student=09212001','Download resume (not exist)',Error)
+stu1.test('/resume','Upload resume',{},file=[('resume','resume.txt','Test Resume')])
+admin.test('/resume?student=09212001','Download resume',lambda x: x=='Test Resume',no_json=True)
 stu1.test('/select','Select in phase 0',Error,subject=subjectids[0])
 
 admin.test('/phase','Advance to Phase 1 with no PW',Error,foo='bar')
 admin.test('/phase','Advance to Phase 1',{'phase':1},password=passwordHash('admin','admin'))
 
 # Phase 1
+stu1.test('/resume','Update resume',{},file=[('resume','resume_new.txt','Test Update')])
+admin.test('/resume?student=09212001','Download resume',lambda x: x=='Test Update',no_json=True)
 stu1.test('/select','Select',{},subject=subjectids[0])
 stu2=Session()
 stu2.test('/login','Student Login',{"role":"Student"},username='09212002',password=passwordHash('09212002','09212002'))
