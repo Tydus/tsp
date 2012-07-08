@@ -63,3 +63,41 @@ class hSelect(JsonRequestHandler):
         u.save()
 
         self.write({})
+
+@leafHandler(r'''/resume''')
+class hResume(JsonRequestHandler):
+    @authenticated()
+    def get(self):
+        student=self.get_argument('student',"")
+
+        u=Student.objects(username=student).first()
+        if not u:
+            return self.write({'err':'学生不存在'})
+        if not u.resume:
+            return self.write({'err':'学生没有简历'})
+
+        self.set_header('Content-disposition':'attachment;filename='+u.resume.filename)
+        self.write(u.resume.read())
+
+    @authenticated([Student],[0])
+    def post(self):
+        u=self.current_user
+
+        r=self.request.files.get('resume')
+        if not r:
+            raise HTTPError(400)
+        r=r[0]
+
+        if u.resume:
+            u.resume.delete()
+
+        u.resume.new_file()
+        u.resume.write(r['body'])
+        u.resume.close()
+        u.resume.filename=r['filename']
+        u.resume.save()
+
+        u.save()
+
+        self.write({})
+

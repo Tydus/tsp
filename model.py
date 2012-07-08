@@ -24,6 +24,7 @@ class Student(User):
     department=StringField(required=True)                 # 专业
     cls=StringField(required=True)                        # 班级
     cls_index=IntField(required=True)                     # 班内序号
+    resume=FileField()                                    # 简历
 
     # Attention: these are a part of circular-reference,
     #            use string to solve the issue
