@@ -15,6 +15,7 @@ from tornado.web import HTTPError
 from bson import ObjectId
 from json import dumps
 from operator import itemgetter
+from StringIO import StringIO
 
 @leafHandler(r'''/select''')
 class hSelect(JsonRequestHandler):
@@ -76,10 +77,11 @@ class hResume(JsonRequestHandler):
         if not u.resume:
             return self.write({'err':'学生没有简历'})
 
-        self.set_header('Content-disposition':'attachment;filename='+u.resume.filename)
+        # FIXME: an ugly hack here by using content_type for filename due to a MongoEngine bug
+        self.set_header('Content-disposition','attachment;filename='+u.resume.content_type)
         self.write(u.resume.read())
 
-    @authenticated([Student],[0])
+    @authenticated([Student],[0,1])
     def post(self):
         u=self.current_user
 
@@ -88,14 +90,11 @@ class hResume(JsonRequestHandler):
             raise HTTPError(400)
         r=r[0]
 
+        # FIXME: an ugly hack here by using content_type for filename due to a MongoEngine bug
         if u.resume:
-            u.resume.delete()
-
-        u.resume.new_file()
-        u.resume.write(r['body'])
-        u.resume.close()
-        u.resume.filename=r['filename']
-        u.resume.save()
+            u.resume.replace(StringIO(r['body']),content_type=r['filename'])
+        else:
+            u.resume.put(StringIO(r['body']),content_type=r['filename'])
 
         u.save()
 
