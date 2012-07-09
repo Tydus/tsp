@@ -10,8 +10,8 @@
 ################################################################################
 
 from model import User,Admin,Settings,Professor,Student,Subject
-from util import JsonRequestHandler,leafHandler,phase,resetDB,passwordHash,authenticated,sessions,clearSelection
-from tornado.web import HTTPError
+from util import JsonRequestHandler,leafHandler,phase,resetDB,passwordHash,authenticated,sessions,clearSelection,LongPollMixin
+from tornado.web import HTTPError,asynchronous
 from bson import ObjectId
 
 @leafHandler(r'''/phase''')
@@ -39,16 +39,28 @@ class hPhase(JsonRequestHandler):
         self.write({'phase':d.phase})
 
 @leafHandler(r'''/announce''')
-class hAnnounce(JsonRequestHandler):
+class hAnnounce(JsonRequestHandler,LongPollMixin):
+    @asynchronous
     def get(self):
+        if self.get_argument('lp',""):
+            hAnnounce.add_cb(self.on_announce)
+            return
+
         d=Settings.objects().first()
         self.write({'announce':d.announce})
+        self.finish()
+
+    def on_announce(self,announce):
+        self.write({'announce':announce})
+        self.finish()
+        return False
 
     @authenticated([Admin])
     def post(self):
         d=Settings.objects().first()
-        d['announce']=self.get_argument('announce')
+        d.announce=self.get_argument('announce')
         d.save()
+        hAnnounce.fire_all(d.announce)
         self.write({})
 
 @leafHandler(r'''/reset''')
