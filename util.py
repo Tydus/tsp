@@ -73,13 +73,22 @@ class JsonRequestHandler(RequestHandler):
         u.reload()
         return u
 
-class LPRequestHandler(JsonRequestHandler):
+class LongPollMixin:
     ''' Long Polling '''
     _cb=[]
 
-    @staticmethod
-    def fire_all(*args,**kwargs):
-        LPRequestHandler._cb=[i for i in LPRequestHandler._cb if i(*args,**kwargs)]
+    @classmethod
+    def fire_all(cls,*args,**kwargs):
+        ''' Fire all Callbacks and remove if it returns False '''
+        cls._cb=[i for i in cls._cb if not (
+                    i.__self__.request.connection.stream.closed()
+                    or i(*args,**kwargs)
+                )]
+
+    @classmethod
+    def add_cb(cls,func):
+        ''' Add a callback for LP '''
+        cls._cb.append(func)
 
 class Phase(object):
     def __str__(self):
