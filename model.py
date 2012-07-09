@@ -15,10 +15,11 @@ from mongoengine import *
 class User(Document,EmbeddedDocument):
     meta={'allow_inheritance':True}
 
+    # Don't use primary_key for EmbeddedDocument, see MongoDB Issue #530
     username=StringField(required=True)                   # 用户名（学号，工号）
-    #username=StringField(required=True,primary_key=True)  # 用户名（学号，工号）
     password=StringField(required=True)                   # 密码
     realname=StringField(required=True)                   # 姓名
+    
 
 class Student(User):
     department=StringField(required=True)                 # 专业
@@ -57,6 +58,6 @@ class Subject(Document,EmbeddedDocument):
 # Settings
 class Settings(Document):
     phase=IntField(required=True)                            # 系统进行阶段
-    announce=StringField(default="")                         # 
+    announce=StringField(default="")                         # 系统公告
 
 connect('tsp')
