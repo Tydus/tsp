@@ -73,10 +73,8 @@ class hResume(JsonRequestHandler):
         student=self.get_argument('student',"")
 
         u=Student.objects(username=student).first()
-        if not u:
-            return self.write({'err':'学生不存在'})
-        if not u.resume:
-            return self.write({'err':'学生没有简历'})
+        if not u or not u.resume:
+            return HTTPError(404)
 
         # Guess browser and write Content-Disposition
 
