@@ -74,7 +74,7 @@ class hResume(JsonRequestHandler):
 
         u=Student.objects(username=student).first()
         if not u or not u.resume:
-            return HTTPError(404)
+            raise HTTPError(404)
 
         # Guess browser and write Content-Disposition
 
