@@ -154,7 +154,7 @@ admin.test('/subject','Show Subject',getSubjectIds)
 pro2.test('/modify','Professor Modify Subject',{},id=subjectids[2],name='s21-modified',desc='This is subject21\nModified\n')
 admin.test('/subject','Check Subject Modification',lambda x:x['subject'][2]['name']=='s21-modified')
 
-pro2.test('/resume?student=09212001','Download resume (not exist)',Error)
+pro2.test('/resume?student=09212001','Download resume (not exist)',StatusCode(404))
 stu1.test('/resume','Upload resume',{},file=[('resume','resume.txt','Test Resume')])
 admin.test('/resume?student=09212001','Download resume',lambda x: x=='Test Resume',no_json=True)
 stu1.test('/select','Select in phase 0',Error,subject=subjectids[0])
