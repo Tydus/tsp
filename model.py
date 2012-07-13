@@ -57,6 +57,7 @@ class Subject(Document,EmbeddedDocument):
 
 # Settings
 class Settings(Document):
+    ttl=IntField(required=True)                              # 会话超时
     phase=IntField(required=True)                            # 系统进行阶段
     announce=StringField(default="")                         # 系统公告
 

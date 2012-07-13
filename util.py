@@ -19,10 +19,10 @@ from pymongo import Connection
 from mongoengine import connect
 
 # Session Storage
-TTL=15*60 # 15min
 class SessionStorage():
 
     def __init__(self):
+        SessionStorage.TTL=Settings.objects.first().ttl
         self.clear()
 
     def __getitem__(self,key):
@@ -33,7 +33,7 @@ class SessionStorage():
         # Get User by Session, and update TTL
         if ss.has_key(key):
             if ss[key]['ttl']>=time():
-                ss[key]['ttl']=time()+TTL
+                ss[key]['ttl']=time()+SessionStorage.TTL
                 return ss[key]['user']
             else:
                 del ss[key]
@@ -44,7 +44,10 @@ class SessionStorage():
     def createSession(self,user):
         # Create a new Session
         s=sha1(str(ObjectId())).hexdigest()
-        self.__sessions[s]={'user':user,'ttl':time()+TTL}
+        self.__sessions[s]={
+                    'user':user,
+                    'ttl':time()+SessionStorage.TTL
+                }
         return s
 
     def deleteSession(self,session):
@@ -126,8 +129,11 @@ def resetDB(name='tsp',host='localhost',port=27017,username=None,password=None):
             username='admin',
             password=passwordHash('admin','admin'),
             realname='administrator',
-         ).save()
-    Settings(phase=0).save()
+        ).save()
+    Settings(
+            phase=0,
+            ttl=86400,
+        ).save()
 
 def passwordHash(username,password):
     from hashlib import sha1
