@@ -81,7 +81,7 @@ class hProfile(JsonRequestHandler):
 class hSubject(JsonRequestHandler):
     def get(self):
         l=[]
-        for i in Subject.objects:
+        for i in Subject.objects.order_by('+id'):
             t={
                 'id':str(i.id),
                 'name':i.name,
@@ -101,13 +101,13 @@ class hSubject(JsonRequestHandler):
                 }
             l.append(t)
 
-        return self.write({'subject':sorted(l,key=itemgetter('name'))})
+        return self.write({'subject':l})
 
 @leafHandler(r'''/student''')
 class hStudent(JsonRequestHandler):
     def get(self):
         l=[]
-        for i in Student.objects:
+        for i in Student.objects.order_by('+username'):
             t={
                 'username':i.username,
                 'realname':i.realname,
@@ -119,5 +119,5 @@ class hStudent(JsonRequestHandler):
                 }
             l.append(t)
 
-        return self.write({'student':sorted(l,key=itemgetter('username'))})
+        return self.write({'student':l})
 
