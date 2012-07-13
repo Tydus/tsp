@@ -174,7 +174,7 @@ stu2.test('/select','Change Selection',{},subject=subjectids[0])
 
 stu3=Session()
 stu3.test('/login','Student Login',{"role":"Student"},username='09212003',password=passwordHash('09212003','09212003'))
-stu3.test('/select','Select',{},subject=subjectids[1])
+stu3.test('/select','Select',{},subject=subjectids[2])
 stu1.test('/student','Check Student Selection',lambda x:reduce(lambda c,i:c+bool(i['selected']),x['student'],0)==3)
 admin.test('/subject','Show Subject',getSelectedStudentNames)
 
@@ -187,10 +187,10 @@ pro1.test('/approve',"Approve",{},subject=subjectids[0],student=selectedstudentn
 admin.test('/subject','Check if Approved',lambda x:x['subject'][0]['applied_to']['username']==selectedstudentnames[0][0])
 pro1.test('/approve',"Change Approvement",{},subject=subjectids[0],student=selectedstudentnames[0][1])
 stu2.test('/subject','Check if Approvement Changed',lambda x:x['subject'][0]['applied_to']['username']==selectedstudentnames[0][1])
-pro2.test('/approve',"Approve None",{},subject=subjectids[1])
-pro3.test('/subject','Check None Approvement',lambda x:x['subject'][1]['applied_to']==None)
+pro2.test('/approve',"Approve None",{},subject=subjectids[2])
+pro3.test('/subject','Check None Approvement',lambda x:x['subject'][2]['applied_to']==None)
 
-pro3.test('/subject','Check Selection',lambda x:x['subject'][0]['selected_by'] and x['subject'][1]['selected_by'])
+pro3.test('/subject','Check Selection',lambda x:x['subject'][0]['selected_by'] and x['subject'][2]['selected_by'])
 stu1.test('/student',"Check Student's Approvement",lambda x:reduce(lambda c,i:c+bool(i['applied_to']),x['student'],0)==1)
 stu1.test('/student','Check Student Selection',lambda x:reduce(lambda c,i:c+bool(i['selected']),x['student'],0)==3)
 
@@ -219,8 +219,8 @@ stu2.test('/subject','Check Approvement Clearation',lambda x:reduce(lambda c,i:c
 stu1.test('/select','Select in Phase 5',Error,subject=subjectids[0])
 pro2.test('/approve','Approve in Phase 5',Error,subject=subjectids[2],student=selectedstudentnames[2][0])
 
-stu2.test('/select','Assigned Student Selecting',Error,subject=subjectids[2])
-stu3.test('/select','Select Assigned Subject',Error,subject=subjectids[0])
+stu2.test('/select','Assigned Student Selecting',Error,subject=subjectids[3])
+stu1.test('/select','Select Assigned Subject',Error,subject=subjectids[0])
 admin.test('/match','Match Assigned Student',Error,subject=subjectids[2],student=selectedstudentnames[2][0])
 admin.test('/match','Match',{},subject=subjectids[3],student=studentnames[4])
 
