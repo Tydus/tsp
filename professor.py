@@ -54,13 +54,19 @@ class hModify(JsonRequestHandler):
         source=self.get_argument('source',default="")
 
         s=Subject.objects(id=ObjectId(subject)).first()
+        if not s:
+            return self.write({'err':'课题不存在'})
+
+        if s.professor.username!=self.current_user.username:
+            return self.write({'err':'不是你的课题'})
+
         for i in ['name','desc','type1','type2','source']:
             value=self.get_argument(i,default="")
             if value:
                 s[i]=value
         s.save()
 
-        return self.write({})
+        self.write({})
 
 @leafHandler(r'''/approve''')
 class hApprove(JsonRequestHandler):
