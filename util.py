@@ -75,6 +75,8 @@ class JsonRequestHandler(RequestHandler):
             return None
         u.reload()
         return u
+    def prepare(self):
+        self.set_header('Cache-Control','no-cache')
 
 class LongPollMixin:
     ''' Long Polling '''

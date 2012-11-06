@@ -152,3 +152,19 @@ class hMatch(JsonRequestHandler):
         u.save()
 
         self.write({})
+
+@leafHandler(r'''/resetpw''')
+class hResetPw(JsonRequestHandler):
+    @authenticated([Admin])
+    def post(self):
+
+        username=self.get_argument('username')
+        
+        u=User.objects(username=username).first()
+        if not u:
+            return self.write({'err':'用户不存在'})
+
+        u.password=password
+        u.save()
+
+        return self.write({})
