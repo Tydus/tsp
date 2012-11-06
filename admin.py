@@ -164,7 +164,7 @@ class hResetPw(JsonRequestHandler):
         if not u:
             return self.write({'err':'用户不存在'})
 
-        u.password=password
+        u.password=passwordHash(username,username)
         u.save()
 
         return self.write({})
