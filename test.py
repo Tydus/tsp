@@ -129,6 +129,7 @@ pro1.test('/chpasswd','Professor Change Password',{},password=passwordHash('1901
 pro1.test('/logout','Professor Logout',{},foo='bar')
 pro1.test('/login','Professor Login with new Pw',{"role":"Professor"},username='1901801001',password=passwordHash('1901801001','test'))
 pro1.test('/add','Professor Add Subject',lambda x:x.has_key('id'),name='s1',desc='This is subject1\nNewline\n',type1='1',type2='1',source='1')
+pro1.test('/add','Professor Add Duplicate Subject',Error,name='s1',desc='This is subject1\nNewline\n',type1='1',type2='1',source='1')
 pro1.test('/add','Professor Add Subject',lambda x:x.has_key('id'),name='中文测试',desc='This is subject2\nNewline\n',type1='2',type2='2',source='1')
 
 pro2=Session()
