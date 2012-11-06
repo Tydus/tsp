@@ -29,7 +29,7 @@ class hAdd(JsonRequestHandler):
         source=self.get_argument('source')
 
         old_s=Subject.objects(name=name).first()
-        if old_s and old_s.professor.username=u.username:
+        if old_s and old_s.professor.username==u.username:
             return self.write({'err':'课题已存在'})
 
         s=Subject(
