@@ -52,7 +52,7 @@ t   Phase                       GP  /phase      password=<>                     
 t   Announce                    P   /announce   announce=<>                                  {}
 t   Reset DB                    P   /reset      password=<>                                  {}
 t   Match Student to Subject    P   /match      subject=<SubjectID>&student=<StudentID>      {}
-
+t   Reset Password              P   /resetpw    username=<>                                  {}
 
 Professor
 t   Add Subject                 P   /add        name=<>&desc=<>&type1=<>&type2=<>&source=<>  {id}
